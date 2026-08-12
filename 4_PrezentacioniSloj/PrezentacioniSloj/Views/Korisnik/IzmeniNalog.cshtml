@@ -1,0 +1,44 @@
+﻿@model PrezentacioniSloj.ViewModels.UpravljanjeNalogomViewModel
+
+<form asp-controller="Korisnik" asp-action="UpravljanjeNalogom" method="get">
+	<button type="submit">Nazad</button>
+</form>
+
+@if (TempData["PorukaIzmenaPodataka"] != null)
+{
+	<div>
+		@TempData["PorukaIzmenaPodataka"]
+	</div>
+}
+
+<form asp-action="IzmeniNalog" method="post">
+	<label>Ime</label>
+	<input asp-for="Ime" />
+	<span asp-validation-for="Ime"></span>
+
+	<label>Prezime</label>
+	<input asp-for="Prezime" />
+	<span asp-validation-for="Prezime"></span>
+
+	<label>Email</label>
+	<input asp-for="Email" />
+	<span asp-validation-for="Email"></span>
+
+	<label>Broj Telefona</label>
+	<input asp-for="BrojTelefona" />
+	<span asp-validation-for="BrojTelefona"></span>
+
+	<label>Datum Rođenja</label>
+	<input asp-for="DatumRodjenja" type="date" />
+	<span asp-validation-for="DatumRodjenja"></span>
+
+	<label>Pol</label>
+	<select asp-for="Pol">
+		<option value="Ženski">Ženski</option>
+		<option value="Muški">Muški</option>
+	</select>
+
+	<button type="submit">Sačuvaj izmene</button>
+</form>
+
+<a asp-action="PromeniLozinku">Promeni lozinku</a>

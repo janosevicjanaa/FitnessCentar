@@ -1,0 +1,34 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "REST",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/popust/parametri": {
+      "get": {
+        "tags": [
+          "REST"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/clanarina/cena": {
+      "get": {
+        "tags": [
+          "REST"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "components": { }
+}

@@ -1,0 +1,55 @@
+﻿@model PrezentacioniSloj.ViewModels.KorisnikProfilAdminViewModel
+
+
+<h2>Profil korisnika</h2>
+
+@if (TempData["PorukaAdmin"] != null)
+{
+    <div>
+        @TempData["PorukaAdmin"]
+    </div>
+}
+
+
+<p>Ime: @Model.Ime</p>
+
+<p>Prezime: @Model.Prezime</p>
+
+<p>Email: @Model.Email</p>
+
+<p>Telefon: @Model.BrojTelefona</p>
+
+<p>Pol: @Model.Pol</p>
+
+<p>Datum rođenja: @Model.DatumRodjenja</p>
+
+<hr />
+
+<h3>Članarina</h3>
+
+<p>Status: @Model.StatusClanarine</p>
+
+<p>Aktivacija: @Model.DatumAktivacije</p>
+
+<p>Istek: @Model.DatumIsteka</p>
+
+<p>Cena članarine: @Model.Cena din</p>
+
+<p>Popust: @Model.Popust %</p>
+
+<p>Zahtev za produženje: @(Model.ZahtevZaProduzenje ? "Poslat" : "Nije poslat")</p>
+
+@if (Model.ZahtevZaProduzenje)
+{
+    <form asp-action="PotvrdiUplatu" method="post">
+        <input type="hidden" name="korisnikID" value="@Model.KorisnikID" />
+
+        <button type="submit">Potvrdi uplatu</button>
+    </form>
+
+    <form asp-action="OdbijZahtev" method="post">
+        <input type="hidden" name="korisnikID" value="@Model.KorisnikID" />
+
+        <button type="submit">Odbij zahtev</button>
+    </form>
+}

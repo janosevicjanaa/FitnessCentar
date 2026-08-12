@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PravilaZaPopust>
+	<Popust>
+		<MinBrojRealizacija>0</MinBrojRealizacija>
+		<ProcenatPopusta>0</ProcenatPopusta>
+	</Popust>
+	<Popust>
+		<MinBrojRealizacija>100</MinBrojRealizacija>
+		<ProcenatPopusta>10</ProcenatPopusta>
+	</Popust>
+	<Popust>
+		<MinBrojRealizacija>180</MinBrojRealizacija>
+		<ProcenatPopusta>20</ProcenatPopusta>
+	</Popust>	
+</PravilaZaPopust>

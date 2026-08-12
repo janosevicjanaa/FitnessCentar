@@ -1,0 +1,116 @@
+﻿@model PrezentacioniSloj.ViewModels.NovaEvidencijaViewModel
+
+<h2>NOVA EVIDENCIJA</h2>
+
+<form asp-controller="Korisnik" asp-action="Index" method="get">
+    <button type="submit">Nazad</button>
+</form>
+
+@{
+    var datum = Model.Datum.ToString(
+        "dddd, d. MMMM, yyyy",
+        new System.Globalization.CultureInfo("sr-Latn-RS"));
+
+    datum = char.ToUpper(datum[0]) + datum.Substring(1);
+}
+
+<p>@datum</p>
+
+@if(Model.DanasnjeVezbe.Count > 0)
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Naziv Vežbe</th>
+                <th>Tip</th>
+                <th>Br. Serija</th>
+                <th>Br. Ponavljanja</th>
+                <th>Težina</th>
+                <th>Trajanje</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var vezba in Model.DanasnjeVezbe)
+            {
+                <tr>
+                    <td>@vezba.NazivVezbe</td>
+                    <td>@vezba.NazivTipa</td>
+                    <td>@vezba.BrojSerija</td>
+                    <td>@vezba.BrojPonavljanja</td>
+                    <td>@vezba.Tezina</td>
+                    <td>@vezba.Trajanje</td>
+                    <td>
+                        <form asp-action="IzmeniVezbu" method="get">
+                            <input type="hidden" name="realizacijaID" value="@vezba.RealizacijaID" />
+                            <button type="submit">Izmeni</button>
+                        </form>
+
+                        <form asp-controller="Korisnik" asp-action="IzbrisiVezbu" method="post">
+                            <input type="hidden" name="realizacijaID" value="@vezba.RealizacijaID" />
+                            <button type="submit">Izbriši</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<form asp-action="SacuvajVezbu" method="post">
+
+    <input type="hidden" asp-for="Datum" />
+    <input type="hidden" asp-for="NovaVezba.RealizacijaID" />
+
+    <label>Naziv vežbe</label>
+    <input asp-for="NovaVezba.NazivVezbe" />
+
+    <label>Tip</label>
+
+    <select asp-for="NovaVezba.TipVezbeID">
+
+        <option value="">
+            Izaberite tip
+        </option>
+
+        @foreach (var tip in Model.TipoviVezbe)
+        {
+            <option value="@tip.TipVezbeID">
+                @tip.NazivTipa
+            </option>
+        }
+
+    </select>
+
+    <label>Br. Serija</label>
+    <input asp-for="NovaVezba.BrojSerija" />
+
+    <label>Br. Ponavljanja</label>
+    <input asp-for="NovaVezba.BrojPonavljanja" />
+
+    <label>Težina</label>
+    <input asp-for="NovaVezba.Tezina" />
+
+    <label>Trajanje</label>
+    <input asp-for="NovaVezba.Trajanje" />
+
+
+    <button type="submit">
+        Sačuvaj vežbu
+    </button>
+
+</form>
+
+<form asp-action="SacuvajSve" method="post">
+    <button type="submit">Sačuvaj sve</button>
+</form>
+
+
+<form asp-action="IzbrisiSve" method="post" onsubmit="return confirm('Da li ste sigurni da želite da izbrišete sve unete vežbe?');">
+
+    <input type="hidden" name="datum" value="@Model.Datum.ToString("yyyy-MM-dd")" />
+
+    <input type="hidden" name="povratak" value="NovaEvidencija" />
+
+    <button type="submit">Izbriši sve</button>
+
+</form>

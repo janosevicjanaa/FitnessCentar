@@ -1,0 +1,67 @@
+﻿@model PrezentacioniSloj.ViewModels.RegistracijaViewModel
+
+<h2>Registracija korisnika</h2>
+
+<form asp-action="Index" method="post">
+
+    <div>
+        <label>Ime</label>
+        <input asp-for="Ime" />
+        <span asp-validation-for="Ime"></span>
+    </div>
+
+
+    <div>
+        <label>Prezime</label>
+        <input asp-for="Prezime" />
+        <span asp-validation-for="Prezime"></span>
+    </div>
+
+
+    <div>
+        <label>Email</label>
+        <input asp-for="Email" />
+        <span asp-validation-for="Email"></span>
+    </div>
+
+
+    <div>
+        <label>Lozinka</label>
+        <input asp-for="Lozinka" />
+        <span asp-validation-for="Lozinka"></span>
+    </div>
+
+
+    <div>
+        <label>Broj telefona</label>
+        <input asp-for="BrojTelefona" />
+        <span asp-validation-for="BrojTelefona"></span>
+    </div>
+
+
+    <div>
+        <label>Datum rođenja</label>
+        <input asp-for="DatumRodjenja" type="date" />
+        <span asp-validation-for="DatumRodjenja"></span>
+    </div>
+
+
+    <div>
+        <label>Pol</label>
+        <select asp-for="Pol">
+            <option value="">-- Izaberite pol --</option>
+            <option value="Muški">Muški</option>
+            <option value="Ženski">Ženski</option>
+        </select>
+        <span asp-validation-for="Pol"></span>
+    </div>
+
+
+    <button type="submit">Registruj se</button>
+
+</form>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

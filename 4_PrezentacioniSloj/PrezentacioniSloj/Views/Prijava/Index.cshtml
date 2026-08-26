@@ -1,30 +1,40 @@
 ﻿@model PrezentacioniSloj.ViewModels.PrijavaViewModel
 
-<h2>Prijava korisnika</h2>
 
-<form asp-action="Index" method="post">
+    <div class="prijava">
+        <h2>PRIJAVITE SE</h2>
+        <div class="prijava-forma">
+            <form asp-action="Index" method="post">
 
-    <div>
-        <label>Email:</label>
-        <input asp-for="Email" />
-        <span asp-validation-for="Email"></span>
+                <div asp-validation-summary="ModelOnly"></div>
+
+                <div class="forma-polje">
+                    <label>Email</label>
+                    <input asp-for="Email" />
+                    <span asp-validation-for="Email"></span>
+                </div>
+
+                
+
+                <div class="forma-polje">
+                    <label>Lozinka</label>
+                    <input asp-for="Lozinka" type="password" />
+                    <span asp-validation-for="Lozinka"></span>
+                </div>
+
+                
+
+                <button class="dugme-prvo" type="submit">Prijavi se</button>
+
+            </form>
+        </div>
+        
+
+        <p>Nemate nalog? <a asp-controller="Registracija" asp-action="Index">Kreiraj nalog</a></p>
     </div>
+   
 
-    <br />
 
-    <div>
-        <label>Lozinka:</label>
-        <input asp-for="Lozinka" type="password" />
-        <span asp-validation-for="Lozinka"></span>
-    </div>
-
-    <br />
-
-    <button type="submit">Prijavi se</button>
-
-</form>
-
-<p>Nemate nalog? <a asp-controller="Registracija" asp-action="Index">Kreiraj nalog</a></p>
 
 
 @section Scripts {

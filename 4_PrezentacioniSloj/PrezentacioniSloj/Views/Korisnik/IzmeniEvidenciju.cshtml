@@ -1,114 +1,141 @@
 ﻿@model PrezentacioniSloj.ViewModels.IzmeniEvidencijuViewModel
+<div class="upravljanje-clanarinom">
+    <div class="naslov">
+        <h2>IZMENA EVIDENCIJE VEŽBI</h2>
 
-<h2>IZMENA EVIDENCIJE VEŽBI</h2>
+        <form asp-controller="Korisnik" asp-action="EvidencijaVezbi" method="get">
+            <input type="hidden" name="datum" value="@Model.Datum.ToString("yyyy-MM-dd")" />
+            <button class="dugme-prvo" type="submit">Nazad</button>
+        </form>
+    </div>
+   
 
-<form asp-controller="Korisnik" asp-action="EvidencijaVezbi" method="get">
-    <input type="hidden" name="datum" value="@Model.Datum.ToString("yyyy-MM-dd")" />
-    <button type="submit">Nazad</button>
-</form>
+    @{
+        var datum = Model.Datum.ToString("dddd, d. MMMM, yyyy", new System.Globalization.CultureInfo("sr-Latn-RS"));
 
-@{
-    var datum = Model.Datum.ToString("dddd, d. MMMM, yyyy", new System.Globalization.CultureInfo("sr-Latn-RS"));
+        datum = char.ToUpper(datum[0]) + datum.Substring(1);
+    }
 
-    datum = char.ToUpper(datum[0]) + datum.Substring(1);
-}
+    <p class="datum">@datum</p>
 
-<p>@datum</p>
-
-<table>
-    <thead>
-        <tr>
-            <th>Naziv vežbe</th>
-            <th>Tip</th>
-            <th>Br. serija</th>
-            <th>Br. ponavljanja</th>
-            <th>Težina</th>
-            <th>Trajanje</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach (var vezba in Model.Vezbe)
-        {
+    <table class="tabela">
+        <thead>
             <tr>
-                <td>@vezba.NazivVezbe</td>
-                <td>@vezba.NazivTipa</td>
-                <td>@vezba.BrojSerija</td>
-                <td>@vezba.BrojPonavljanja</td>
-                <td>@vezba.Tezina</td>
-                <td>@vezba.Trajanje</td>
-
-                <td>
-                    <form asp-action="IzmeniVezbu" method="get">
-
-                        <input type="hidden" name="realizacijaID" value="@vezba.RealizacijaID" />
-                        <input type="hidden" name="datum" value="@Model.Datum.ToString("yyyy-MM-dd")" />
-                        <input type="hidden" name="povratak" value="IzmeniEvidenciju" />
-
-                        <button type="submit">
-                            Izmeni
-                        </button>
-
-                    </form>
-
-                    <form asp-action="IzbrisiVezbu" method="post">
-
-                        <input type="hidden" name="realizacijaID" value="@vezba.RealizacijaID" />
-                        <input type="hidden" name="datum" value="@Model.Datum.ToString("yyyy-MM-dd")" />
-
-                        <button type="submit">
-                            Izbriši
-                        </button>
-                    </form>
-                </td>
+                <th>Naziv vežbe</th>
+                <th>Tip</th>
+                <th>Br. serija</th>
+                <th>Br. ponavljanja</th>
+                <th>Težina</th>
+                <th>Trajanje</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
 
-@if (Model.NovaVezba != null && Model.NovaVezba.RealizacijaID > 0)
-{
-    <h3>Izmena vežbe</h3>
-
-    <form asp-controller="Korisnik" asp-action="SacuvajVezbu" method="post">
-
-        <input type="hidden" asp-for="NovaVezba.RealizacijaID" />
-
-        <input type="hidden" asp-for="Datum" />
-
-        <input type="hidden" name="povratak" value="IzmeniEvidenciju" />
-
-        <label>Naziv vežbe</label>
-        <input asp-for="NovaVezba.NazivVezbe" />
-
-        <label>Tip</label>
-
-        <select asp-for="NovaVezba.TipVezbeID">
-            <option value="">Izaberite tip</option>
-
-            @foreach (var tip in Model.TipoviVezbe)
+        <tbody>
+            @foreach (var vezba in Model.Vezbe)
             {
-                <option value="@tip.TipVezbeID">
-                    @tip.NazivTipa
-                </option>
+                <tr>
+                    <td>@vezba.NazivVezbe</td>
+                    <td>@vezba.NazivTipa</td>
+                    <td>@vezba.BrojSerija</td>
+                    <td>@vezba.BrojPonavljanja</td>
+                    <td>@vezba.Tezina</td>
+                    <td>@vezba.Trajanje</td>
+
+                    <td class="tabela-dugmad">
+                        <form asp-action="IzmeniVezbu" method="get">
+
+                            <input type="hidden" name="realizacijaID" value="@vezba.RealizacijaID" />
+                            <input type="hidden" name="datum" value="@Model.Datum.ToString("yyyy-MM-dd")" />
+                            <input type="hidden" name="povratak" value="IzmeniEvidenciju" />
+
+                            <button class="dugme-prvo izmeni"type="submit">
+                                Izmeni
+                            </button>
+
+                        </form>
+
+                        <form asp-action="IzbrisiVezbu" method="post">
+
+                            <input type="hidden" name="realizacijaID" value="@vezba.RealizacijaID" />
+                            <input type="hidden" name="datum" value="@Model.Datum.ToString("yyyy-MM-dd")" />
+
+                            <button class="dugme-trece" type="submit">
+                                Izbriši
+                            </button>
+                        </form>
+                    </td>
+                </tr>
             }
-        </select>
+        </tbody>
+    </table>
 
-        <label>Br. serija</label>
-        <input asp-for="NovaVezba.BrojSerija" />
+    @if (Model.NovaVezba != null && Model.NovaVezba.RealizacijaID > 0)
+    {
+        <h3 class="izmena">Izmena vežbe</h3>
 
-        <label>Br. ponavljanja</label>
-        <input asp-for="NovaVezba.BrojPonavljanja" />
+        <div class="evidencija-forma">
+            <form asp-controller="Korisnik" asp-action="SacuvajVezbu" method="post">
 
-        <label>Težina</label>
-        <input asp-for="NovaVezba.Tezina" />
+                <input type="hidden" asp-for="NovaVezba.RealizacijaID" />
 
-        <label>Trajanje</label>
-        <input asp-for="NovaVezba.Trajanje" />
+                <input type="hidden" asp-for="Datum" />
 
-        <button type="submit">
-            Sačuvaj vežbu
-        </button>
+                <input type="hidden" name="povratak" value="IzmeniEvidenciju" />
 
-    </form>
-}
+                <div class="evidencija-forma-gornja">
+                    <div class="forma-polje naziv">
+                        <label>Naziv vežbe</label>
+                        <input asp-for="NovaVezba.NazivVezbe" />
+                    </div>
+                    
+                    <div class="forma-polje tip">
+                        <label>Tip</label>
+
+                        <select asp-for="NovaVezba.TipVezbeID">
+                            <option value="">Izaberite tip</option>
+
+                            @foreach (var tip in Model.TipoviVezbe)
+                            {
+                                <option value="@tip.TipVezbeID">
+                                    @tip.NazivTipa
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    
+                </div>
+                
+                <div class="evidencija-forma-donja">
+                    <div class="forma-polje manje">
+                        <label>Br. serija</label>
+                        <input asp-for="NovaVezba.BrojSerija" />
+                    </div>
+                    
+                    <div class="forma-polje manje">
+                        <label>Br. ponavljanja</label>
+                        <input asp-for="NovaVezba.BrojPonavljanja" />
+                    </div>
+                    
+                    <div class="forma-polje manje">
+                        <label>Težina</label>
+                        <input asp-for="NovaVezba.Tezina" />
+                    </div>
+                    
+                    <div class="forma-polje manje">
+                        <label>Trajanje</label>
+                        <input asp-for="NovaVezba.Trajanje" />
+                    </div>
+                    
+                </div>
+                
+
+                <button class="dugme-prvo" type="submit">
+                    Sačuvaj vežbu
+                </button>
+
+            </form>
+        </div>
+        
+    }
+</div>
+

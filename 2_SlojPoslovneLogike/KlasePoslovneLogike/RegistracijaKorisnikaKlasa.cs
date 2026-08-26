@@ -38,14 +38,14 @@ namespace KlasePoslovneLogike
                     return 0;
                 }
 
-                Console.WriteLine("Pre poziva RESTA");
+                
                 decimal cena = _restServisClanarine.DajCenuClanarine();
-                Console.WriteLine("Cena: " + cena);
+                
 
                 int popust = 0;
 
                 bool kreiranaClanarina = _spClanarinaDB.KreirajClanarinuKorisnika(korisnikID, cena, popust);
-                Console.WriteLine("Kreirana clanarina: " + kreiranaClanarina);
+                
 
                 if (!kreiranaClanarina)
                 {

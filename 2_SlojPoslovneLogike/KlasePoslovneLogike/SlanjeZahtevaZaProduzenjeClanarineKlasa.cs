@@ -37,7 +37,7 @@ namespace KlasePoslovneLogike
 
             DateOnly danas = DateOnly.FromDateTime(DateTime.Today);
 
-            if (clanarina.DatumIsteka > danas.AddDays(20))
+            if (clanarina.DatumIsteka > danas.AddDays(7))
             {
                 return "Prerano";
             }

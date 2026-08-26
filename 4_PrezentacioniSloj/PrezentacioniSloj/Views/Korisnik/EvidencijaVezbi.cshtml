@@ -9,57 +9,65 @@
 
 </style>
 
-<h2>EVIDENCIJA VEŽBI</h2>
+<div class="upravljanje-clanarinom">
+	<div class="naslov">
+		<h2>EVIDENCIJA VEŽBI</h2>
 
-<form asp-controller="Korisnik" asp-action="Index" method="get">
-	<button type="submit">Nazad</button>
-</form>
+		<form asp-controller="Korisnik" asp-action="Index" method="get">
+			<button class="dugme-prvo ne-stampaj" type="submit">Nazad</button>
+		</form>
+	</div>
+	
 
-@{
-	var datum = Model.Datum.ToString("dddd, d. MMMM, yyyy", new System.Globalization.CultureInfo("sr-Latn-RS"));
-	datum = char.ToUpper(datum[0]) + datum.Substring(1);
-}
+	@{
+		var datum = Model.Datum.ToString("dddd, d. MMMM, yyyy", new System.Globalization.CultureInfo("sr-Latn-RS"));
+		datum = char.ToUpper(datum[0]) + datum.Substring(1);
+	}
 
-<h3>@datum</h3>
+	<p class="datum">@datum</p>
 
 
-<table>
-	<thead>
-		<tr>
-			<th>Naziv vežbe</th>
-			<th>Tip</th>
-			<th>Br. Serija</th>
-			<th>Br. Ponavljanja</th>
-			<th>Težina</th>
-			<th>Trajanje</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var vezba in Model.Vezbe)
-		{
-
+	<table class="tabela">
+		<thead>
 			<tr>
-				<td>@vezba.NazivVezbe</td>
-				<td>@vezba.NazivTipa</td>
-				<td>@vezba.BrojSerija</td>
-				<td>@vezba.BrojPonavljanja</td>
-				<td>@vezba.Tezina</td>
-				<td>@vezba.Trajanje</td>
+				<th>Naziv vežbe</th>
+				<th>Tip</th>
+				<th>Br. Serija</th>
+				<th>Br. Ponavljanja</th>
+				<th>Težina</th>
+				<th>Trajanje</th>
 			</tr>
+		</thead>
+		<tbody>
+			@foreach (var vezba in Model.Vezbe)
+			{
 
-		}
-	</tbody>
-</table>
+				<tr>
+					<td>@vezba.NazivVezbe</td>
+					<td>@vezba.NazivTipa</td>
+					<td>@vezba.BrojSerija</td>
+					<td>@vezba.BrojPonavljanja</td>
+					<td>@vezba.Tezina</td>
+					<td class="prikazi-pozadinu">@vezba.Trajanje</td>
+				</tr>
 
-<form asp-action="IzmeniEvidenciju" method="get">
-	<input type="hidden" name="datum" value="@Model.Datum.ToString("yyyy-MM-dd")" />
-	<button class="ne-stampaj" type="submit">Izmeni evidenciju</button>
-</form>
+			}
+		</tbody>
+	</table>
 
-<form asp-action="IzbrisiSve" method="post">
-	<input type="hidden" name="datum" value="@Model.Datum" />
-	<button class="ne-stampaj" type="submit">Izbriši evidenciju</button>
-</form>
+	<form asp-action="IzmeniEvidenciju" method="get">
+		<input type="hidden" name="datum" value="@Model.Datum.ToString("yyyy-MM-dd")" />
+		<button class="ne-stampaj dugme-prvo evidencija" type="submit">Izmeni evidenciju</button>
+	</form>
 
-<button class="ne-stampaj" type="button" onclick="window.print()">Štampaj evidenciju</button>
+	<button class="ne-stampaj dugme-drugo evidencija" type="button" onclick="window.print()">Štampaj evidenciju</button>
+
+	<form asp-action="IzbrisiSve" method="post">
+		<input type="hidden" name="datum" value="@Model.Datum" />
+		<button class="ne-stampaj dugme-trece evidencija" type="submit">Izbriši evidenciju</button>
+	</form>
+
+	
+</div>
+
 

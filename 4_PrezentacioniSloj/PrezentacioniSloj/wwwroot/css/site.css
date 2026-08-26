@@ -18,5 +18,300 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin: 0px;
+    padding: 0px;
+    background-color: #FFF3FD;
+}
+
+.prijava {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0px;
+}
+
+.prijava-forma form{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.forma-polje label {
+    color: #EF4D96;
+}
+
+.forma-polje input{
+    width: 240px;
+    background-color: #AFF288;
+    border: none;
+    border-radius: 8px;
+    padding: 4px 0px;
+}
+
+.forma-polje select {
+    width: 240px;
+    background-color: #AFF288;
+    border: none;
+    border-radius: 8px;
+    padding: 4px 0px;
+}
+
+.dugme-prvo{
+    background-color: #EF4D96;
+    color: #E0FFcE;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    width: 180px;
+    padding: 4px 0px;
+    
+}
+
+.prijava h2 {
+    color: #EF4D96;
+}
+
+.forma-polje{
+    display:flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+}
+
+.prijava p {
+    margin-top: 12px;
+    color: #EF4D96;
+}
+
+.prijava a{
+    color: #528F2e;
+}
+
+.upravljanje-clanarinom {
+    margin: 12px 24px;
+}
+
+.naslov{
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 16px;
+    justify-content:left;
+    
+}
+
+.naslov .dugme-prvo{
+    width: 80px;
+}
+
+.naslov h2 {
+        color: #EF4D96;
+}
+
+.dugme-drugo{
+    background-color: #528F2E;
+    color: #E2FFD1;
+    border: none;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.upravljanje-info b{
+    color: #EE026C;
+}
+
+#popupClanarina{
+    margin-top: 12px;
+}
+
+#popupClanarina h3 {
+    color: #EF4D96;
+}
+
+#popupClanarina strong {
+    color: #EE026C;
+}
+
+.dugme-trece {
+    background-color: #EE026C;
+    color: #E2FFD1;
+    border: none;
+    border-radius: 8px;
+    padding: 5px 24px;
+}
+
+#popupClanarina .dugme-prvo{
+    width: 160px;
+}
+
+.nalog-dugmad{
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    justify-content:right;
+    
+}
+
+
+.nalog-dugmad .dugme-trece{
+    padding: 8px;
+}
+
+.prijava-forma .dugme-drugo{
+    margin-top: 12px;
+    padding: 5px 25px;
+    font-size: 18px;
+}
+
+.datum{
+    color: #EE026C;
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 24px;
+}
+
+.evidencija-forma{
+    display: flex;
+    flex-direction: column;
+    margin-top: 24px;
+
+}
+
+.evidencija-forma-gornja, .evidencija-forma-donja{
+    display: flex;
+    flex-direction: row;
+    
+}
+
+.evidencija-forma-gornja{
+    gap: 24px;
+}
+
+.evidencija-forma-donja{
+    gap: 24px;
+}
+
+.naziv input{
+    width: 280px;
+}
+
+.tip select{
+    width: 80px;
+}
+
+.manje input{
+    width: 48px;
+    
+}
+
+.evidencija-forma-donja .forma-polje{
+    align-items: center;
+}
+
+.evidencija-forma .dugme-prvo{
+    margin-top: 12px;
+}
+
+.evidencija{
+    font-size: 18px;
+    width: 180px;
+    padding: 4px 0px;
+    margin-top: 12px;
+}
+
+.tabela table{
+    width: 800px;
+    
+}
+
+.tabela td{
+    background-color: #AFF288;
+    border: solid 1px gray;
+    padding: 4px 8px;
+    justify-content: center;
+}
+
+.tabela td.tabela-dugmad{
+    background-color: transparent;
+    border: none;
+}
+
+.tabela th {
+    background-color: #EF4D96;
+    color: #E2FFD1;
+    border: solid 1px gray;
+    padding: 4px 8px;
+}
+
+.tabela-dugmad{
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    
+}
+
+.izmeni{
+    width: 88px;
+    font-size: 16px;
+    padding: 5px 0px;
+}
+
+.prikazi-pozadinu {
+    background-color: #AFF288;
+}
+
+.izvestaj h3 {
+        color: #EF4D96;
+}
+
+.izvestaj .dugme-prvo{
+    margin-top: 12px;
+}
+
+.izmena {
+    margin-top: 24px;
+    color: #EF4D96;
+}
+
+.index-clanarina{
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+}
+
+.index-clanarina p{
+    font-size: 18px;
+}
+
+.index-naslov {
+    color: #EF4D96;
+    margin-top: 24px;
+}
+
+.index{
+    font-size: 24px;
+}
+
+.filteri{
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    margin: 18px 0px;
+    align-items: center;
+}
+
+.admin{
+    margin-bottom: 18px;
+}
+
+    .admin a {
+        color: #EF4D96;
+    }
+
+.validation-summary-errors ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }

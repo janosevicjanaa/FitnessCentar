@@ -1,55 +1,68 @@
 ﻿@model PrezentacioniSloj.ViewModels.KorisnikProfilAdminViewModel
 
-
-<h2>Profil korisnika</h2>
-
-@if (TempData["PorukaAdmin"] != null)
-{
-    <div>
-        @TempData["PorukaAdmin"]
+<div class="upravljanje-clanarinom">
+    <div class="naslov">
+        <h2>Profil korisnika</h2>
+        <form asp-controller="Admin" asp-action="Index" method="get">
+            <button class="dugme-prvo" type="submit">Nazad</button>
+        </form>
     </div>
-}
+    
+    
 
+    @if (TempData["PorukaAdmin"] != null)
+    {
+        <div>
+            @TempData["PorukaAdmin"]
+        </div>
+    }
 
-<p>Ime: @Model.Ime</p>
+    <div class="upravljanje-info">
+        <p><b>Ime:</b> @Model.Ime</p>
 
-<p>Prezime: @Model.Prezime</p>
+        <p><b>Prezime:</b> @Model.Prezime</p>
 
-<p>Email: @Model.Email</p>
+        <p><b>Email:</b> @Model.Email</p>
 
-<p>Telefon: @Model.BrojTelefona</p>
+        <p><b>Telefon:</b> @Model.BrojTelefona</p>
 
-<p>Pol: @Model.Pol</p>
+        <p><b>Pol:</b> @Model.Pol</p>
 
-<p>Datum rođenja: @Model.DatumRodjenja</p>
+        <p><b>Datum rođenja:</b> @Model.DatumRodjenja</p>
 
-<hr />
+        <hr />
+        <div class="naslov">
+            <h2>Članarina</h2>
+        </div>
+        
 
-<h3>Članarina</h3>
+        <p><b>Status:</b> @Model.StatusClanarine</p>
 
-<p>Status: @Model.StatusClanarine</p>
+        <p><b>Aktivacija:</b> @Model.DatumAktivacije</p>
 
-<p>Aktivacija: @Model.DatumAktivacije</p>
+        <p><b>Istek:</b> @Model.DatumIsteka</p>
 
-<p>Istek: @Model.DatumIsteka</p>
+        <p><b>Cena članarine:</b> @Model.Cena din</p>
 
-<p>Cena članarine: @Model.Cena din</p>
+        <p><b>Popust:</b> @Model.Popust %</p>
 
-<p>Popust: @Model.Popust %</p>
+        <p><b>Zahtev za produženje:</b> @(Model.ZahtevZaProduzenje ? "Poslat" : "Nije poslat")</p>
 
-<p>Zahtev za produženje: @(Model.ZahtevZaProduzenje ? "Poslat" : "Nije poslat")</p>
+        @if (Model.ZahtevZaProduzenje)
+        {
+            <form asp-action="PotvrdiUplatu" method="post">
+                <input type="hidden" name="korisnikID" value="@Model.KorisnikID" />
 
-@if (Model.ZahtevZaProduzenje)
-{
-    <form asp-action="PotvrdiUplatu" method="post">
-        <input type="hidden" name="korisnikID" value="@Model.KorisnikID" />
+                <button class="dugme-prvo evidencija" type="submit">Potvrdi uplatu</button>
+            </form>
 
-        <button type="submit">Potvrdi uplatu</button>
-    </form>
+            <form asp-action="OdbijZahtev" method="post">
+                <input type="hidden" name="korisnikID" value="@Model.KorisnikID" />
 
-    <form asp-action="OdbijZahtev" method="post">
-        <input type="hidden" name="korisnikID" value="@Model.KorisnikID" />
+                <button class="dugme-trece evidencija" type="submit">Odbij zahtev</button>
+            </form>
+        }
+    </div>
+    
+</div>
 
-        <button type="submit">Odbij zahtev</button>
-    </form>
-}

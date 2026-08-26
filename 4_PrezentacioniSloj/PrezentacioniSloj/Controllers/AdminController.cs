@@ -161,5 +161,12 @@ namespace PrezentacioniSloj.Controllers
             return RedirectToAction("ProfilKorisnika", new { korisnikId = korisnikID });
         }
 
+        public IActionResult Odjava()
+        {
+            HttpContext.Session.Clear();
+
+            return RedirectToAction("Index", "Prijava");
+        }
+
     }
 }

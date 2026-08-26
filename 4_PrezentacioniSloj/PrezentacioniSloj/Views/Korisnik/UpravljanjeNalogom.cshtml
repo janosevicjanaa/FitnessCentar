@@ -1,44 +1,54 @@
 ﻿@model PrezentacioniSloj.ViewModels.UpravljanjeNalogomViewModel
 
-<h2>Upravljanje nalogom</h2>
+<div class="upravljanje-clanarinom">
+    <div class="naslov">
+        <h2>UPRAVLJAJTE NALOGOM</h2>
 
-<form asp-controller="Korisnik" asp-action="Index" method="get">
-    <button type="submit">Nazad</button>
-</form>
-
-@if (TempData["PorukaBrisanje"] != null)
-{
-    <div>
-        @TempData["PorukaBrisanje"]
+        <form asp-controller="Korisnik" asp-action="Index" method="get">
+            <button class="dugme-prvo" type="submit">Nazad</button>
+        </form>
     </div>
-}
+    
 
-@if (TempData["PorukaIzmenaLozinke"] != null)
-{
-    <div>
-        @TempData["PorukaIzmenaLozinke"]
+    @if (TempData["PorukaBrisanje"] != null)
+    {
+        <div>
+            @TempData["PorukaBrisanje"]
+        </div>
+    }
+
+    @if (TempData["PorukaIzmenaLozinke"] != null)
+    {
+        <div>
+            @TempData["PorukaIzmenaLozinke"]
+        </div>
+    }
+
+    <div class="upravljanje-info">
+        <p><b>Ime:</b> @Model.Ime</p>
+        <p><b>Prezime:</b> @Model.Prezime</p>
+        <p><b>Email:</b> @Model.Email</p>
+        <p><b>Broj telefona:</b> @Model.BrojTelefona</p>
+        <p><b>Datum rođenja:</b> @Model.DatumRodjenja</p>
+        <p><b>Pol:</b> @Model.Pol</p>
     </div>
-}
+    
+    <form asp-action="IzmeniNalog" method="get">
+        <button class="dugme-prvo" type="submit">Izmeni</button>
+    </form>
+    
+    <div class="nalog-dugmad">
+        <form asp-action="ObrisiNalog" method="post" onsubmit="return confirm('Da li ste sigurni da želite da obrišete svoj nalog?');">
+            <button class="dugme-trece" type="submit">
+                Izbriši nalog
+            </button>
+        </form>
 
-<div>
-    <p><b>Ime:</b> @Model.Ime</p>
-    <p><b>Prezime:</b> @Model.Prezime</p>
-    <p><b>Email:</b> @Model.Email</p>
-    <p><b>Broj telefona:</b> @Model.BrojTelefona</p>
-    <p><b>Datum rođenja:</b> @Model.DatumRodjenja</p>
-    <p><b>Pol:</b> @Model.Pol</p>
+        <form asp-action="Odjava" method="post">
+            <button class="dugme-drugo" type="submit">Odjavi se</button>
+        </form>
+    </div>
+    
+    
 </div>
 
-<a asp-action="IzmeniNalog">
-    Izmeni
-</a>
-
-<form asp-action="ObrisiNalog" method="post" onsubmit="return confirm('Da li ste sigurni da želite da obrišete svoj nalog?');">
-    <button type="submit" class="btn btn-danger">
-        Izbriši nalog
-    </button>
-</form>
-
-<a asp-controller="Korisnik" asp-action="Odjava">
-    Odjavi se
-</a>

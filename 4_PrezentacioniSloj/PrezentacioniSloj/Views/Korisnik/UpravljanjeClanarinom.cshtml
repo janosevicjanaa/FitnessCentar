@@ -1,76 +1,82 @@
 ﻿@model PrezentacioniSloj.ViewModels.UpravljanjeClanarinomViewModel
 
-<h2>Upravljanje članarinom</h2>
+<div class="upravljanje-clanarinom">
+    <div class="naslov">
+        <h2>UPRAVLJAJTE ČLANARINOM</h2>
 
-<form asp-controller="Korisnik" asp-action="Index" method="get">
-    <button type="submit">Nazad</button>
-</form>
-
-@if (TempData["PorukaKorisnik"] != null)
-{
-    <div>
-        @TempData["PorukaKorisnik"]
+        <form asp-controller="Korisnik" asp-action="Index" method="get">
+            <button class="dugme-prvo" type="submit">Nazad</button>
+        </form>
     </div>
-}
+    
 
-<div>
-    <p>
-        <b>Status članarine:</b>
-        @Model.StatusClanarine
-    </p>
+    @if (TempData["PorukaKorisnik"] != null)
+    {
+        <div>
+            @TempData["PorukaKorisnik"]
+        </div>
+    }
 
-    <p>
-        <b>Datum aktivacije:</b>
-        @Model.DatumAktivacije
-    </p>
+    <div class="upravljanje-info">
+        <p>
+            <b>Status članarine:</b>
+            @Model.StatusClanarine
+        </p>
 
-    <p>
-        <b>Datum isteka:</b>
-        @Model.DatumIsteka
-    </p>
+        <p>
+            <b>Datum aktivacije:</b>
+            @Model.DatumAktivacije
+        </p>
 
-    <p>
-        <b>Cena:</b>
-        @Model.Cena din
-    </p>
+        <p>
+            <b>Datum isteka:</b>
+            @Model.DatumIsteka
+        </p>
 
-    <p>
-        <b>Popust:</b>
-        @Model.Popust %
-    </p>
-</div>
+        <p>
+            <b>Cena:</b>
+            @Model.Cena din
+        </p>
+
+        <p>
+            <b>Popust:</b>
+            @Model.Popust %
+        </p>
+    </div>
 
 
-    <button type="button" onclick="otvoriPopup()">
+    <button class="dugme-drugo" type="button" onclick="otvoriPopup()">
         Pošalji zahtev za produženje
     </button>
 
 
-<div id="popupClanarina" style="display: none;">
-    <div>
-        <h3>Zahtev za produženje članarine</h3>
+    <div id="popupClanarina" style="display: none;">
+        <div>
+            <h3>Zahtev za produženje članarine</h3>
 
-        <p>
-            Ostvarili ste <strong>@Model.Popust%</strong> popusta na članarinu.
-        </p>
+            <p>
+                Ostvarili ste <strong>@Model.Popust%</strong> popusta na članarinu.
+            </p>
 
-        <p>
-            Cena članarine sa popustom iznosi <strong>@Model.Cena.ToString("0.00") RSD</strong>.
-        </p>
+            <p>
+                Cena članarine sa popustom iznosi <strong>@Model.Cena.ToString("0.00") RSD</strong>.
+            </p>
 
-        <p>Da li želite da pošaljete zahtev za produženje članarine?</p>
+            <p>Da li želite da pošaljete zahtev za produženje članarine?</p>
 
-        <p>
-            Uplata članarine vrši se u Fitness centru.
-            Članarina će biti aktivna od dana kada se izvrši uplata.
-        </p>
+            <p>
+                Uplata članarine vrši se u Fitness centru.
+                Članarina će biti aktivna od dana kada se izvrši uplata.
+            </p>
 
-        <form asp-action="PosaljiZahtev" method="post">
-            <button type="submit">Pošalji zahtev</button>
-            <button type="button" onclick="zatvoriPopup()">Otkaži</button>
-        </form>
+            <form asp-action="PosaljiZahtev" method="post">
+                <button class="dugme-prvo" type="submit">Pošalji zahtev</button>
+                <button class="dugme-trece" type="button" onclick="zatvoriPopup()">Otkaži</button>
+            </form>
+        </div>
     </div>
 </div>
+
 
 
 <script>

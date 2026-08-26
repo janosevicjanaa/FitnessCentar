@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\slike\**" />
+    <Content Remove="wwwroot\slike\**" />
+    <EmbeddedResource Remove="wwwroot\slike\**" />
+    <None Remove="wwwroot\slike\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\2_SlojPoslovneLogike\KlasePoslovneLogike\KlasePoslovneLogike.csproj" />
   </ItemGroup>
 

@@ -1,24 +1,37 @@
 ﻿@model PrezentacioniSloj.ViewModels.PromeniLozinkuViewModel
-
-<form asp-controller="Korisnik" asp-action="IzmeniNalog" method="get">
-	<button type="submit">Nazad</button>
-</form>
-
-@if (TempData["PorukaIzmenaLozinkeGreska"] != null)
-{
-	<div>
-		@TempData["PorukaIzmenaLozinkeGreska"]
+<div class="upravljanje-clanarinom">
+	<div class="naslov">
+		<h2>PROMENITE LOZINKU</h2>
+		<form asp-controller="Korisnik" asp-action="IzmeniNalog" method="get">
+			<button class="dugme-prvo" type="submit">Nazad</button>
+		</form>
 	</div>
-}
+	
 
-<form asp-action="PromeniLozinku" method="post">
-	<label>Trenutna Lozinka</label>
-	<input asp-for="StaraLozinka" type="password" />
-	<span asp-validation-for="StaraLozinka"></span>
+	@if (TempData["PorukaIzmenaLozinkeGreska"] != null)
+	{
+		<div>
+			@TempData["PorukaIzmenaLozinkeGreska"]
+		</div>
+	}
+	<div class="prijava-forma">
+		<form asp-action="PromeniLozinku" method="post">
+			<div class="forma-polje">
+				<label>Trenutna Lozinka</label>
+				<input asp-for="StaraLozinka" type="password" />
+				<span asp-validation-for="StaraLozinka"></span>
+			</div>
+			
+			<div class="forma-polje">
+				<label>Nova Lozinka</label>
+				<input asp-for="NovaLozinka" type="password" />
+				<span asp-validation-for="NovaLozinka"></span>
+			</div>
+			
 
-	<label>Nova Lozinka</label>
-	<input asp-for="NovaLozinka" type="password" />
-	<span asp-validation-for="NovaLozinka"></span>
+			<button class="dugme-prvo" typeof="submit">Promeni lozinku</button>
+		</form>
+	</div>
+	
+</div>
 
-	<button typeof="submit">Promeni lozinku</button>
-</form>

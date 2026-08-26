@@ -1,96 +1,107 @@
 ﻿@model PrezentacioniSloj.ViewModels.PocetnaStranaViewModel
 
-<h2>Dobrodošli, @Model.Ime @Model.Prezime</h2>
+<div class="upravljanje-clanarinom">
+    
+        <h2 class="index-naslov">Dobrodošli, @Model.Ime @Model.Prezime</h2>
+    
+    
 
-<p>Status članarine: @Model.StatusClanarine</p>
-<a asp-controller="Korisnik" asp-action="UpravljanjeClanarinom" class="btn btn-primary">
-    Upravljaj članarinom
-</a>
+    <div class="index-clanarina">
+        <p>Status članarine: @Model.StatusClanarine</p>
+        <form asp-controller="Korisnik" asp-action="UpravljanjeClanarinom" method="get">
+            <button class="dugme-prvo" type="submit">Upravljaj članarinom</button>
+        </form>
+        
+    </div>
+    
 
-<a asp-controller="Korisnik" asp-action="UpravljanjeNalogom" class="btn btn-primary">
-    Upravljaj nalogom
-</a>
+    <form asp-controller="Korisnik" asp-action="UpravljanjeNalogom" method="get">
+        <button class="dugme-prvo evidencija" type="submit"> Upravljaj nalogom</button>
+    </form>
 
-<form asp-controller="Korisnik" asp-action="ParametarskaStampa" method="get">
-    <button type="submit">Štampaj Izveštaj</button>
-</form>
+    <form asp-controller="Korisnik" asp-action="ParametarskaStampa" method="get">
+        <button class="dugme-drugo evidencija" type="submit">Štampaj Izveštaj</button>
+    </form>
 
-@{
-    var datum = Model.DanasnjiDatum.ToString(
+    @{
+        var datum = Model.DanasnjiDatum.ToString(
         "dddd, d. MMMM, yyyy",
         new System.Globalization.CultureInfo("sr-Latn-RS")
-    );
+        );
 
-    datum = char.ToUpper(datum[0]) + datum.Substring(1);
-}
+        datum = char.ToUpper(datum[0]) + datum.Substring(1);
+    }
 
-<p>@datum</p>
+    <p class="datum index">@datum</p>
 
-@if (Model.DanasnjeVezbe.Count == 0)
-{
-    <p>Za danas nemate evidenciju vežbi!</p>
-    <form asp-action="NovaEvidencija" method="get">
-        <button type="submit">Započni</button>
-    </form>
-}
-else
-{
-    <p>Vežbe odrađene za danas.</p>
-    <form asp-action="EvidencijaVezbi" method="get">
-        <input type="hidden" name="datum" value="@Model.DanasnjiDatum" />
-        <button type="submit">Prikaz</button>
-    </form>
-    <form asp-action="NovaEvidencija" method="get">
-        <button type="submit">Započni</button>
-    </form>
-}
-
-@if (Model.IstorijaVezbi.Count == 0)
-{
-    <p>Nemate prethodno odrađene vežbe.</p>
-}
-else
-{
-    var grupe = Model.IstorijaVezbi.GroupBy(v => v.DatumRealizacije).OrderByDescending(g => g.Key);
-
-    foreach(var grupa in grupe)
+    @if (Model.DanasnjeVezbe.Count == 0)
     {
-        var datumRealizacije = grupa.Key.ToString("dddd, d. MMMM, yyyy", new System.Globalization.CultureInfo("sr-Latn-RS"));
-
-        datumRealizacije = char.ToUpper(datumRealizacije[0]) + datumRealizacije.Substring(1);
-
-        <h3>@datumRealizacije</h3>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Naziv vežbe</th>
-                    <th>Tip vežbe</th>
-                    <th>Br. serija</th>
-                    <th>Br. ponavljanja</th>
-                    <th>Težina (kg)</th>
-                    <th>Trajanje (min)</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach(var vezba in grupa)
-                {
-                    <tr>
-                        <td>@vezba.NazivVezbe</td>
-                        <td>@vezba.NazivTipa</td>
-                        <td>@vezba.BrojSerija</td>
-                        <td>@vezba.BrojPonavljanja</td>
-                        <td>@vezba.Tezina</td>
-                        <td>@vezba.Trajanje</td>
-                    </tr>
-                }
-                
-            </tbody>
-        </table>
-
-        <form asp-action="EvidencijaVezbi" method="get">
-            <input type="hidden" name="datum" value="@grupa.Key" />
-            <button type="submit">Prikaz</button>
+        <p>Za danas nemate evidenciju vežbi!</p>
+        <form asp-action="NovaEvidencija" method="get">
+            <button class="dugme-prvo" type="submit">Započni</button>
         </form>
     }
-}
+    else
+    {
+        <p>Vežbe odrađene za danas.</p>
+        <form asp-action="EvidencijaVezbi" method="get">
+            <input type="hidden" name="datum" value="@Model.DanasnjiDatum" />
+            <button class="dugme-drugo evidencija" type="submit">Prikaz</button>
+        </form>
+        <form asp-action="NovaEvidencija" method="get">
+            <button class="dugme-prvo evidencija" type="submit">Započni</button>
+        </form>
+    }
+
+    @if (Model.IstorijaVezbi.Count == 0)
+    {
+        <p>Nemate prethodno odrađene vežbe.</p>
+    }
+    else
+    {
+        <h2 class="index-naslov">ISTORIJA VEŽBI</h2>
+        var grupe = Model.IstorijaVezbi.GroupBy(v => v.DatumRealizacije).OrderByDescending(g => g.Key);
+
+        foreach (var grupa in grupe)
+        {
+            var datumRealizacije = grupa.Key.ToString("dddd, d. MMMM, yyyy", new System.Globalization.CultureInfo("sr-Latn-RS"));
+
+            datumRealizacije = char.ToUpper(datumRealizacije[0]) + datumRealizacije.Substring(1);
+
+            <p class="datum">@datumRealizacije</p>
+
+            <table class="tabela">
+                <thead>
+                    <tr>
+                        <th>Naziv vežbe</th>
+                        <th>Tip vežbe</th>
+                        <th>Br. serija</th>
+                        <th>Br. ponavljanja</th>
+                        <th>Težina (kg)</th>
+                        <th>Trajanje (min)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var vezba in grupa)
+                    {
+                        <tr>
+                            <td>@vezba.NazivVezbe</td>
+                            <td>@vezba.NazivTipa</td>
+                            <td>@vezba.BrojSerija</td>
+                            <td>@vezba.BrojPonavljanja</td>
+                            <td>@vezba.Tezina</td>
+                            <td>@vezba.Trajanje</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+            <form asp-action="EvidencijaVezbi" method="get">
+                <input type="hidden" name="datum" value="@grupa.Key" />
+                <button class="dugme-drugo evidencija" type="submit">Prikaz</button>
+            </form>
+        }
+    }
+</div>
+

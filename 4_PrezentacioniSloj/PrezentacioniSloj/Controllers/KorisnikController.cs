@@ -454,14 +454,14 @@ namespace PrezentacioniSloj.Controllers
             {
 				string rezultat = _ogranicenjeZaDodavanjeRealizacije.DodajRealizacijuAkoJeDozvoljeno(realizacija);
 
-				if (rezultat == "Uspesno")
+				if (rezultat != "Uspesno")
 				{
-					TempData["PorukaRealizacije"] = "Vežba je dodata.";
-				}
-				else
-				{
-					TempData["PorukaRealizacije"] = rezultat;
-				}
+                    TempData["PorukaRealizacije"] = rezultat;
+                }
+				
+				
+					
+		
 			}
 
 

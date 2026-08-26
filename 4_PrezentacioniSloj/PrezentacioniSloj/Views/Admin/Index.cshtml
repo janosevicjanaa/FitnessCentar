@@ -1,45 +1,68 @@
 ﻿@model PrezentacioniSloj.ViewModels.AdminViewModel
+<div class="upravljanje-clanarinom">
+    <div class="naslov">
+        <h2>Administratorska strana</h2>
+    </div>
+    
+    
+        <form asp-action="Index" method="get">
+        <div class="filteri">
+            <div class="forma-polje">
+                <label>Prezime:</label>
+                <input asp-for="PrezimePretraga" />
+            </div>
 
-<h2>Administratorska strana</h2>
+            <div clss="forma-polje">
+                <label>Status članarine:</label>
+                <select asp-for="StatusClanarineFilter">
+                    <option value="">Sve</option>
+                    <option value="Aktivna">Aktivna</option>
+                    <option value="Neaktivna">Neaktivna</option>
+                </select>
+            </div>
 
-<form asp-action="Index" method="get">
 
-    <label>Prezime:</label>
-    <input asp-for="PrezimePretraga" />
+            <button class="dugme-prvo" type="submit">Pretraži</button>
+            <form asp-controller="Admin" asp-action="Index" method="get">
+                <button class="dugme-trece" type="submit">Očisti filtere</button>
+            </form>
 
-    <label>Status članarine:</label>
-    <select asp-for="StatusClanarineFilter">
-        <option value="">Sve</option>
-        <option value="Aktivna">Aktivna</option>
-        <option value="Neaktivna">Neaktivna</option>
-    </select>
+        </div>
+        </form>
+    
+   
+    <table class="tabela admin">
+        <thead>
+            <tr>
+                <th>Ime</th>
+                <th>Prezime</th>
+                <th>Email</th>
+                <th>Status članarine</th>
+                <th>Detalji</th>
+            </tr>
+        </thead>
+    <tbody>
 
-    <button type="submit">Pretraži</button>
-    <a asp-action="Index" class="btn btn-secondary">
-        Očisti filtere
-    </a>
+        @foreach (var korisnik in Model.Korisnici)
+        {
+            <tr>
+                <td>@korisnik.Ime</td>
+                <td>@korisnik.Prezime</td>
+                <td>@korisnik.Email</td>
+                <td>@korisnik.StatusClanarine</td>
 
-</form>
+                <td>
+                    <a asp-controller="Admin" asp-action="ProfilKorisnika" asp-route-korisnikId="@korisnik.KorisnikID">
+                        Detalji
+                    </a>
+                </td>
+            </tr>
+        }
 
-<tbody>
+    </tbody>
+    </table>
 
-    @foreach (var korisnik in Model.Korisnici)
-    {
-        <tr>
-            <td>@korisnik.Ime</td>
-            <td>@korisnik.Prezime</td>
-            <td>@korisnik.Email</td>
-            <td>@korisnik.StatusClanarine</td>
-
-            <td>
-                <a asp-controller="Admin"
-                   asp-action="ProfilKorisnika"
-                   asp-route-korisnikId="@korisnik.KorisnikID">
-                    Detalji
-                </a>
-            </td>
-        </tr>
-    }
-
-</tbody>
-</table>
+    <form asp-action="Odjava" method="post">
+        <button class="dugme-drugo" type="submit">Odjavi se</button>
+    </form>
+</div>

@@ -8,63 +8,79 @@
 	}
 </style>
 
-<h2 class="ne-stampaj">ŠTAMPA IZVEŠTAJA</h2>
+<div class="upravljanje-clanarinom">
+	<div class="naslov">
+		<h2 class="ne-stampaj">ŠTAMPA IZVEŠTAJA</h2>
 
-<form asp-controller="Korisnik" asp-action="Index" method="get">
-	<button type="submit">Nazad</button>
-</form>
+		<form asp-controller="Korisnik" asp-action="Index" method="get">
+			<button class="dugme-prvo ne-stampaj"type="submit">Nazad</button>
+		</form>
+	</div>
+	
+	<div class="prijava-forma">
+		<form class="ne-stampaj" asp-action="ParametarskaStampa" method="post">
+			<div class="forma-polje ne-stampaj">
+				<label>Datum od:</label>
+				<input type="date" asp-for="DatumOd" />
+			</div>
+			
+			<div class="forma-polje ne-stampaj">
+				<label>Datum do:</label>
+				<input type="date" asp-for="DatumDo" />
+			</div>
+			
 
-<form class="ne-stampaj" asp-action="ParametarskaStampa" method="post">
-	<label>Datum od:</label>
-	<input type="date" asp-for="DatumOd" />
+			<button class="ne-stampaj dugme-prvo" type="submit">Prikaži izveštaj</button>
+		</form>
+	</div>
+	
+	<div class="izvestaj">
+		@if (Model.Realizacije != null && Model.Realizacije.Count > 0)
+		{
+			<h3>Izveštaj od @Model.DatumOd.ToString("dd.MM.yyyy.") do @Model.DatumDo.ToString("dd.MM.yyyy.")</h3>
 
-	<label>Datum do:</label>
-	<input type="date" asp-for="DatumDo" />
+			var grupe = Model.Realizacije.GroupBy(v => v.DatumRealizacije).OrderBy(g => g.Key);
 
-	<button type="submit">Prikaži izveštaj</button>
-</form>
+			foreach (var grupa in grupe)
+			{
+				<p class="datum">@grupa.Key.ToString("dd.MM.yyyy.")</p>
 
-@if(Model.Realizacije != null && Model.Realizacije.Count > 0)
-{
-	<h3>Izveštaj od @Model.DatumOd.ToString("dd.MM.yyyy.") do @Model.DatumDo.ToString("dd.MM.yyyy.")</h3>
+				<table class="tabela">
+					<thead>
+						<tr>
+							<th>Naziv vežbe</th>
+							<th>Tip</th>
+							<th>Br. Serija</th>
+							<th>Br. Ponavljanja</th>
+							<th>Težina</th>
+							<th>Trajanje</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var vezba in grupa)
+						{
+							<tr>
+								<td>@vezba.NazivVezbe</td>
+								<td>@vezba.NazivTipa</td>
+								<td>@vezba.BrojSerija</td>
+								<td>@vezba.BrojPonavljanja</td>
+								<td>@vezba.Tezina</td>
+								<td>@vezba.Trajanje</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			}
 
-	var grupe = Model.Realizacije.GroupBy(v => v.DatumRealizacije).OrderBy(g => g.Key);
+			<button class="ne-stampaj dugme-prvo" type="button" onclick="window.print()">Štampaj Izveštaj</button>
+		}
 
-	foreach(var grupa in grupe)
-	{
-		<h4>@grupa.Key.ToString("dd.MM.yyyy.")</h4>
+		else
+		{
+			<p>Nema realizovanih vežbi u izabranom periodu.</p>
+		}
+	</div>
+	
+</div>
 
-		<table>
-			<thead>
-				<tr>
-					<th>Naziv vežbe</th>
-					<th>Tip</th>
-					<th>Br. Serija</th>
-					<th>Br. Ponavljanja</th>
-					<th>Težina</th>
-					<th>Trajanje</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach(var vezba in grupa)
-				{
-					<tr>
-						<td>@vezba.NazivVezbe</td>
-						<td>@vezba.NazivTipa</td>
-						<td>@vezba.BrojSerija</td>
-						<td>@vezba.BrojPonavljanja</td>
-						<td>@vezba.Tezina</td>
-						<td>@vezba.Trajanje</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	}
 
-	<button class="ne-stampaj" type="button" onclick="window.print()">Štampaj Izveštaj</button>
-}
-
-else
-{
-	<p>Nema realizovanih vežbi u izabranom periodu.</p>
-}

@@ -36,19 +36,20 @@ namespace PrezentacioniSloj.Controllers
                 return RedirectToAction("Index", "Prijava");
             }
 
-            DataSet ds = _upravljanjeProfilomKorisnika.DajPodatkeKorisnika(korisnikID.Value);
+            ClanarinaKlasa podaciKorisnika = _upravljanjeProfilomKorisnika.DajPodatkeKorisnika(korisnikID.Value);
 
-            if(ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+            if (podaciKorisnika == null)
             {
                 return RedirectToAction("Index", "Prijava");
             }
 
             PocetnaStranaViewModel model = new PocetnaStranaViewModel();
 
-            model.Ime = ds.Tables[0].Rows[0]["Ime"].ToString();
-            model.Prezime = ds.Tables[0].Rows[0]["Prezime"].ToString();
-            model.StatusClanarine = ds.Tables[0].Rows[0]["StatusClanarine"].ToString();
+            model.Ime = podaciKorisnika.Korisnik.Ime;
+            model.Prezime = podaciKorisnika.Korisnik.Prezime;
+            model.StatusClanarine = podaciKorisnika.StatusClanarine;
             model.DanasnjiDatum = DateOnly.FromDateTime(DateTime.Today);
+
             model.DanasnjeVezbe = new List<RealizacijaVezbeViewModel>();
             model.IstorijaVezbi = new List<RealizacijaVezbeViewModel>();
 
@@ -57,47 +58,41 @@ namespace PrezentacioniSloj.Controllers
                 KorisnikID = korisnikID.Value
             };
 
-            DataSet dsDanasnjeVezbe = _upravljanjeRealizacijamaVezbi.DajRealizacijeZaDanas(prijavljeniKorisnik);
+            List<RealizacijaVezbeKlasa> danasnjeVezbe =_upravljanjeRealizacijamaVezbi.DajRealizacijeZaDanas(prijavljeniKorisnik);
 
-			if (dsDanasnjeVezbe != null && dsDanasnjeVezbe.Tables.Count > 0 && dsDanasnjeVezbe.Tables[0].Rows.Count > 0)
-			{
-				foreach (DataRow red in dsDanasnjeVezbe.Tables[0].Rows)
-				{
-                    model.DanasnjeVezbe.Add(new RealizacijaVezbeViewModel
-                    {
-                        RealizacijaID = Convert.ToInt32(red["RealizacijaID"]),
-                        DatumRealizacije = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumRealizacije"])),
-                        NazivVezbe = red["NazivVezbe"].ToString(),
-                        NazivTipa = red["NazivTipa"].ToString(),
-                        BrojSerija = Convert.ToInt32(red["BrojSerija"]),
-                        BrojPonavljanja = Convert.ToInt32(red["BrojPonavljanja"]),
-                        Tezina = Convert.ToInt32(red["Tezina"]),
-                        Trajanje = Convert.ToInt32(red["Trajanje"])
-                    });
-				}
-			}
-
-            DataSet dsIstorijaVezbi = _upravljanjeRealizacijamaVezbi.DajSveRealizacijeKorisnika(prijavljeniKorisnik);
-
-            if(dsIstorijaVezbi != null && dsIstorijaVezbi.Tables.Count > 0 && dsIstorijaVezbi.Tables[0].Rows.Count > 0)
+            foreach (RealizacijaVezbeKlasa vezba in danasnjeVezbe)
             {
-                foreach(DataRow red in dsIstorijaVezbi.Tables[0].Rows)
+                model.DanasnjeVezbe.Add(new RealizacijaVezbeViewModel
                 {
-                    model.IstorijaVezbi.Add(new RealizacijaVezbeViewModel
-                    {
-                        RealizacijaID = Convert.ToInt32(red["RealizacijaID"]),
-                        DatumRealizacije = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumRealizacije"])),
-                        NazivVezbe = red["NazivVezbe"].ToString(),
-                        NazivTipa = red["NazivTipa"].ToString(),
-                        BrojSerija = Convert.ToInt32(red["BrojSerija"]),
-                        BrojPonavljanja = Convert.ToInt32(red["BrojPonavljanja"]),
-                        Tezina = Convert.ToInt32(red["Tezina"]),
-                        Trajanje = Convert.ToInt32(red["Trajanje"])
-                    });
-                }
+                    RealizacijaID = vezba.RealizacijaID,
+                    DatumRealizacije = vezba.DatumRealizacije,
+                    NazivVezbe = vezba.NazivVezbe,
+                    NazivTipa = vezba.TipVezbe.NazivTipa,
+                    BrojSerija = vezba.BrojSerija,
+                    BrojPonavljanja = vezba.BrojPonavljanja,
+                    Tezina = vezba.Tezina,
+                    Trajanje = vezba.Trajanje
+                });
             }
 
-			return View(model);
+            List<RealizacijaVezbeKlasa> istorijaVezbi =_upravljanjeRealizacijamaVezbi.DajSveRealizacijeKorisnika(prijavljeniKorisnik);
+
+            foreach (RealizacijaVezbeKlasa vezba in istorijaVezbi)
+            {
+                model.IstorijaVezbi.Add(new RealizacijaVezbeViewModel
+                {
+                    RealizacijaID = vezba.RealizacijaID,
+                    DatumRealizacije = vezba.DatumRealizacije,
+                    NazivVezbe = vezba.NazivVezbe,
+                    NazivTipa = vezba.TipVezbe.NazivTipa,
+                    BrojSerija = vezba.BrojSerija,
+                    BrojPonavljanja = vezba.BrojPonavljanja,
+                    Tezina = vezba.Tezina,
+                    Trajanje = vezba.Trajanje
+                });
+            }
+
+            return View(model);
         }
 
         public IActionResult UpravljanjeClanarinom()
@@ -172,28 +167,26 @@ namespace PrezentacioniSloj.Controllers
         {
             int? korisnikID = HttpContext.Session.GetInt32("KorisnikID");
 
-            if(korisnikID == null)
+            if (korisnikID == null)
             {
                 return RedirectToAction("Index", "Prijava");
             }
 
-            DataSet ds = _upravljanjeProfilomKorisnika.DajPodatkeZaUpravljanjeNalogom(korisnikID.Value);
+            KorisnikKlasa korisnik =_upravljanjeProfilomKorisnika.DajPodatkeZaUpravljanjeNalogom(korisnikID.Value);
 
-            if (ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+            if (korisnik == null)
             {
                 return RedirectToAction("Index");
             }
 
-            DataRow red = ds.Tables[0].Rows[0];
-
             UpravljanjeNalogomViewModel model = new UpravljanjeNalogomViewModel
             {
-                Ime = red["Ime"].ToString(),
-                Prezime = red["Prezime"].ToString(),
-                Email = red["Email"].ToString(),
-                BrojTelefona = red["BrojTelefona"].ToString(),
-                DatumRodjenja = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumRodjenja"])),
-                Pol = red["Pol"].ToString()
+                Ime = korisnik.Ime,
+                Prezime = korisnik.Prezime,
+                Email = korisnik.Email,
+                BrojTelefona = korisnik.BrojTelefona,
+                DatumRodjenja = korisnik.DatumRodjenja,
+                Pol = korisnik.Pol
             };
 
             return View(model);
@@ -242,28 +235,26 @@ namespace PrezentacioniSloj.Controllers
         {
             int? korisnikID = HttpContext.Session.GetInt32("KorisnikID");
 
-            if(korisnikID == null)
+            if (korisnikID == null)
             {
                 return RedirectToAction("Index", "Prijava");
             }
 
-            DataSet ds = _upravljanjeProfilomKorisnika.DajPodatkeZaUpravljanjeNalogom(korisnikID.Value);
+            KorisnikKlasa korisnik = _upravljanjeProfilomKorisnika.DajPodatkeZaUpravljanjeNalogom(korisnikID.Value);
 
-            if(ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+            if (korisnik == null)
             {
                 return RedirectToAction("Index");
             }
 
-            DataRow red = ds.Tables[0].Rows[0];
-
             UpravljanjeNalogomViewModel model = new UpravljanjeNalogomViewModel
             {
-                Ime = red["Ime"].ToString(),
-                Prezime = red["Prezime"].ToString(),
-                Email = red["Email"].ToString(),
-                BrojTelefona = red["BrojTelefona"].ToString(),
-                DatumRodjenja = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumRodjenja"])),
-                Pol = red["Pol"].ToString()
+                Ime = korisnik.Ime,
+                Prezime = korisnik.Prezime,
+                Email = korisnik.Email,
+                BrojTelefona = korisnik.BrojTelefona,
+                DatumRodjenja = korisnik.DatumRodjenja,
+                Pol = korisnik.Pol
             };
 
             return View(model);
@@ -390,27 +381,24 @@ namespace PrezentacioniSloj.Controllers
                 KorisnikID = korisnikID.Value
             };
 
-            DataSet dsDanasnjeVezbe = _upravljanjeRealizacijamaVezbi.DajRealizacijeZaDanas(prijavljeniKorisnik);
+            List<RealizacijaVezbeKlasa> danasnjeVezbe =_upravljanjeRealizacijamaVezbi.DajRealizacijeZaDanas(prijavljeniKorisnik);
 
-            if (dsDanasnjeVezbe != null && dsDanasnjeVezbe.Tables.Count > 0 && dsDanasnjeVezbe.Tables[0].Rows.Count > 0)
+            foreach (var vezba in danasnjeVezbe)
             {
-                foreach (DataRow red in dsDanasnjeVezbe.Tables[0].Rows)
+                model.DanasnjeVezbe.Add(new RealizacijaVezbeViewModel
                 {
-                    model.DanasnjeVezbe.Add(new RealizacijaVezbeViewModel
-                    {
-                        RealizacijaID = Convert.ToInt32(red["RealizacijaID"]),
-                        DatumRealizacije = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumRealizacije"])),
-                        NazivVezbe = red["NazivVezbe"].ToString(),
-                        NazivTipa = red["NazivTipa"].ToString(),
-                        BrojSerija = Convert.ToInt32(red["BrojSerija"]),
-                        BrojPonavljanja = Convert.ToInt32(red["BrojPonavljanja"]),
-                        Tezina = Convert.ToDecimal(red["Tezina"]),
-                        Trajanje = Convert.ToInt32(red["Trajanje"])
-                    });
-                }
+                    RealizacijaID = vezba.RealizacijaID,
+                    DatumRealizacije = vezba.DatumRealizacije,
+                    NazivVezbe = vezba.NazivVezbe,
+                    NazivTipa = vezba.TipVezbe.NazivTipa,
+                    BrojSerija = vezba.BrojSerija,
+                    BrojPonavljanja = vezba.BrojPonavljanja,
+                    Tezina = vezba.Tezina,
+                    Trajanje = vezba.Trajanje
+                });
             }
 
-                    return View(model);
+            return View(model);
         }
 
         [HttpPost]
@@ -494,24 +482,21 @@ namespace PrezentacioniSloj.Controllers
             model.Datum = datum;
             model.Vezbe = new List<RealizacijaVezbeViewModel>();
 
-            DataSet ds = _upravljanjeRealizacijamaVezbi.DajRealizacijePoDatumu(prijavljeniKorisnik, datum);
+            List<RealizacijaVezbeKlasa> vezbe =_upravljanjeRealizacijamaVezbi.DajRealizacijePoDatumu(prijavljeniKorisnik, datum);
 
-            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            foreach (var vezba in vezbe)
             {
-                foreach (DataRow red in ds.Tables[0].Rows)
+                model.Vezbe.Add(new RealizacijaVezbeViewModel
                 {
-                    model.Vezbe.Add(new RealizacijaVezbeViewModel
-                    {
-                        RealizacijaID = Convert.ToInt32(red["RealizacijaID"]),
-                        DatumRealizacije = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumRealizacije"])),
-                        NazivVezbe = red["NazivVezbe"].ToString(),
-                        NazivTipa = red["NazivTipa"].ToString(),
-                        BrojSerija = Convert.ToInt32(red["BrojSerija"]),
-                        BrojPonavljanja = Convert.ToInt32(red["BrojPonavljanja"]),
-                        Tezina = Convert.ToInt32(red["Tezina"]),
-                        Trajanje = Convert.ToInt32(red["Trajanje"])
-                    });
-                }
+                    RealizacijaID = vezba.RealizacijaID,
+                    DatumRealizacije = vezba.DatumRealizacije,
+                    NazivVezbe = vezba.NazivVezbe,
+                    NazivTipa = vezba.TipVezbe.NazivTipa,
+                    BrojSerija = vezba.BrojSerija,
+                    BrojPonavljanja = vezba.BrojPonavljanja,
+                    Tezina = vezba.Tezina,
+                    Trajanje = vezba.Trajanje
+                });
             }
 
             return View(model);
@@ -597,45 +582,41 @@ namespace PrezentacioniSloj.Controllers
                 });
             }
 
-            DataSet ds = _upravljanjeRealizacijamaVezbi.DajRealizacijuVezbe(prijavljeniKorisnik, realizacijaID);
+            RealizacijaVezbeKlasa vezba =_upravljanjeRealizacijamaVezbi.DajRealizacijuVezbe(prijavljeniKorisnik, realizacijaID);
 
-            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            if (vezba != null)
             {
-                DataRow red = ds.Tables[0].Rows[0];
-
                 model.NovaVezba = new RealizacijaVezbeViewModel
                 {
-                    RealizacijaID = Convert.ToInt32(red["RealizacijaID"]),
-                    DatumRealizacije = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumRealizacije"])),
-                    NazivVezbe = red["NazivVezbe"].ToString(),
-                    TipVezbeID = Convert.ToInt32(red["TipVezbeID"]),
-                    NazivTipa = red["NazivTipa"].ToString(),
-                    BrojSerija = Convert.ToInt32(red["BrojSerija"]),
-                    BrojPonavljanja = Convert.ToInt32(red["BrojPonavljanja"]),
-                    Tezina = Convert.ToDecimal(red["Tezina"]),
-                    Trajanje = Convert.ToInt32(red["Trajanje"])
+                    RealizacijaID = vezba.RealizacijaID,
+                    DatumRealizacije = vezba.DatumRealizacije,
+                    NazivVezbe = vezba.NazivVezbe,
+                    TipVezbeID = vezba.TipVezbe.TipVezbeID,
+                    NazivTipa = vezba.TipVezbe.NazivTipa,
+                    BrojSerija = vezba.BrojSerija,
+                    BrojPonavljanja = vezba.BrojPonavljanja,
+                    Tezina = vezba.Tezina,
+                    Trajanje = vezba.Trajanje
                 };
             }
 
-            DataSet dsDanasnjeVezbe = _upravljanjeRealizacijamaVezbi.DajRealizacijePoDatumu(prijavljeniKorisnik, model.Datum);
+            
+            List<RealizacijaVezbeKlasa> danasnjeVezbe =_upravljanjeRealizacijamaVezbi.DajRealizacijePoDatumu(prijavljeniKorisnik, model.Datum);
 
-            if (dsDanasnjeVezbe != null && dsDanasnjeVezbe.Tables.Count > 0)
+            foreach (var vezbaZaDatum in danasnjeVezbe)
             {
-                foreach (DataRow red in dsDanasnjeVezbe.Tables[0].Rows)
-                {
-                    model.DanasnjeVezbe.Add(
-                        new RealizacijaVezbeViewModel
-                        {
-                            RealizacijaID = Convert.ToInt32(red["RealizacijaID"]),
-                            DatumRealizacije = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumRealizacije"])),
-                            NazivVezbe =red["NazivVezbe"].ToString(),
-                            NazivTipa =red["NazivTipa"].ToString(),
-                            BrojSerija = Convert.ToInt32(red["BrojSerija"]),
-                            BrojPonavljanja = Convert.ToInt32(red["BrojPonavljanja"]),
-                            Tezina = Convert.ToDecimal(red["Tezina"]),
-                            Trajanje = Convert.ToInt32(red["Trajanje"])
-                        });
-                }
+                model.DanasnjeVezbe.Add(
+                    new RealizacijaVezbeViewModel
+                    {
+                        RealizacijaID = vezbaZaDatum.RealizacijaID,
+                        DatumRealizacije = vezbaZaDatum.DatumRealizacije,
+                        NazivVezbe = vezbaZaDatum.NazivVezbe,
+                        NazivTipa = vezbaZaDatum.TipVezbe.NazivTipa,
+                        BrojSerija = vezbaZaDatum.BrojSerija,
+                        BrojPonavljanja = vezbaZaDatum.BrojPonavljanja,
+                        Tezina = vezbaZaDatum.Tezina,
+                        Trajanje = vezbaZaDatum.Trajanje
+                    });
             }
 
             if (povratak == "IzmeniEvidenciju")
@@ -720,29 +701,24 @@ namespace PrezentacioniSloj.Controllers
                 KorisnikID = korisnikID.Value
             };
 
-            DataSet ds = _upravljanjeRealizacijamaVezbi.DajRealizacijeZaPeriod(prijavljeniKorisnik, model.DatumOd, model.DatumDo);
+            List<RealizacijaVezbeKlasa> realizacije =_upravljanjeRealizacijamaVezbi.DajRealizacijeZaPeriod(prijavljeniKorisnik, model.DatumOd, model.DatumDo);
 
-            if(ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            foreach (var realizacija in realizacije)
             {
-                foreach(DataRow red in ds.Tables[0].Rows)
+                model.Realizacije.Add(new RealizacijaVezbeViewModel
                 {
-                    model.Realizacije.Add(new RealizacijaVezbeViewModel
-                    {
-                        RealizacijaID = Convert.ToInt32(red["RealizacijaID"]),
-                        DatumRealizacije = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumRealizacije"])),
-                        NazivVezbe = red["NazivVezbe"].ToString(),
-                        NazivTipa = red["NazivTipa"].ToString(),
-                        BrojSerija = Convert.ToInt32(red["BrojSerija"]),
-                        BrojPonavljanja = Convert.ToInt32(red["BrojPonavljanja"]),
-                        Tezina = Convert.ToDecimal(red["Tezina"]),
-                        Trajanje = Convert.ToInt32(red["Trajanje"])
-                    });
-
-                    
-                }
+                    RealizacijaID = realizacija.RealizacijaID,
+                    DatumRealizacije = realizacija.DatumRealizacije,
+                    NazivVezbe = realizacija.NazivVezbe,
+                    NazivTipa = realizacija.TipVezbe.NazivTipa,
+                    BrojSerija = realizacija.BrojSerija,
+                    BrojPonavljanja = realizacija.BrojPonavljanja,
+                    Tezina = realizacija.Tezina,
+                    Trajanje = realizacija.Trajanje
+                });
             }
 
-			return View(model);
+            return View(model);
 		}
 
 		[HttpGet]
@@ -765,27 +741,24 @@ namespace PrezentacioniSloj.Controllers
 			model.Datum = datum;
 			model.Vezbe = new List<RealizacijaVezbeViewModel>();
 
-			DataSet ds = _upravljanjeRealizacijamaVezbi.DajRealizacijePoDatumu(korisnik, datum);
+            List<RealizacijaVezbeKlasa> vezbe = _upravljanjeRealizacijamaVezbi.DajRealizacijePoDatumu(korisnik, datum);
 
-			if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-			{
-				foreach (DataRow red in ds.Tables[0].Rows)
-				{
-					model.Vezbe.Add( new RealizacijaVezbeViewModel
-						{
-							RealizacijaID = Convert.ToInt32(red["RealizacijaID"]),
-                            DatumRealizacije = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumRealizacije"])),
-                            NazivVezbe = red["NazivVezbe"].ToString(),
-                            NazivTipa = red["NazivTipa"].ToString(),
-                            BrojSerija = Convert.ToInt32(red["BrojSerija"]),
-                            BrojPonavljanja = Convert.ToInt32(red["BrojPonavljanja"]),
-                            Tezina = Convert.ToDecimal(red["Tezina"]),
-                            Trajanje = Convert.ToInt32(red["Trajanje"])
-						});
-				}
-			}
+            foreach (var vezba in vezbe)
+            {
+                model.Vezbe.Add(new RealizacijaVezbeViewModel
+                {
+                    RealizacijaID = vezba.RealizacijaID,
+                    DatumRealizacije = vezba.DatumRealizacije,
+                    NazivVezbe = vezba.NazivVezbe,
+                    NazivTipa = vezba.TipVezbe.NazivTipa,
+                    BrojSerija = vezba.BrojSerija,
+                    BrojPonavljanja = vezba.BrojPonavljanja,
+                    Tezina = vezba.Tezina,
+                    Trajanje = vezba.Trajanje
+                });
+            }
 
-			return View(model);
+            return View(model);
 		}
 
 	}

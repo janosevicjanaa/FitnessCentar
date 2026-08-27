@@ -1,4 +1,5 @@
-﻿using KlasePodataka.InterfejsKlase;
+﻿using KlasePodataka.EntitetKlase;
+using KlasePodataka.InterfejsKlase;
 using KlasePoslovneLogike;
 using Microsoft.AspNetCore.Mvc;
 using PrezentacioniSloj.ViewModels;
@@ -29,19 +30,19 @@ namespace PrezentacioniSloj.Controllers
                 return RedirectToAction("Index", "Prijava");
             }
 
-            DataSet ds;
+            List<ClanarinaKlasa> clanarine;
 
             if (!string.IsNullOrWhiteSpace(prezimePretraga))
             {
-                ds = _adminUpravljanjeKorisnicima.DajKorisnikePoPrezimenu(prezimePretraga);
+                clanarine = _adminUpravljanjeKorisnicima.DajKorisnikePoPrezimenu(prezimePretraga);
             }
             else if (!string.IsNullOrWhiteSpace(statusClanarineFilter))
             {
-                ds = _adminUpravljanjeKorisnicima.DajKorisnikePoStatusuClanarine(statusClanarineFilter);
+                clanarine = _adminUpravljanjeKorisnicima.DajKorisnikePoStatusuClanarine(statusClanarineFilter);
             }
             else
             {
-                ds = _adminUpravljanjeKorisnicima.DajSveKorisnikeSaStatusomClanarine();
+                clanarine = _adminUpravljanjeKorisnicima.DajSveKorisnikeSaStatusomClanarine();
             }
 
             AdminViewModel model = new AdminViewModel
@@ -51,34 +52,29 @@ namespace PrezentacioniSloj.Controllers
                 StatusClanarineFilter = statusClanarineFilter
             };
 
-            foreach (DataRow red in ds.Tables[0].Rows)
+            foreach (ClanarinaKlasa clanarina in clanarine)
             {
                 model.Korisnici.Add(new KorisnikAdminViewModel
                 {
-                    KorisnikID = Convert.ToInt32(red["KorisnikID"]),
-                    Ime = red["Ime"].ToString(),
-                    Prezime = red["Prezime"].ToString(),
-                    Email = red["Email"].ToString(),
-                    StatusClanarine = red["StatusClanarine"].ToString()
+                    KorisnikID = clanarina.Korisnik.KorisnikID,
+                    Ime = clanarina.Korisnik.Ime,
+                    Prezime = clanarina.Korisnik.Prezime,
+                    Email = clanarina.Korisnik.Email,
+                    StatusClanarine = clanarina.StatusClanarine
                 });
             }
-
-
 
             return View(model);
         }
 
         public IActionResult ProfilKorisnika(int korisnikId)
         {
-			DataSet ds = _adminUpravljanjeKorisnicima.DajProfilKorisnikaZaAdmina(korisnikId);
+            ClanarinaKlasa korisnik =_adminUpravljanjeKorisnicima.DajProfilKorisnikaZaAdmina(korisnikId);
 
-			if (ds == null || ds.Tables[0].Rows.Count == 0)
-			{
-				return RedirectToAction("Index");
-			}
-
-
-			DataRow red = ds.Tables[0].Rows[0];
+            if (korisnik == null)
+            {
+                return RedirectToAction("Index");
+            }
 
             int mesec = DateTime.Today.Month;
             int godina = DateTime.Today.Year;
@@ -89,27 +85,28 @@ namespace PrezentacioniSloj.Controllers
 
             KorisnikProfilAdminViewModel model = new KorisnikProfilAdminViewModel
             {
-                KorisnikID = Convert.ToInt32(red["KorisnikID"]),
-                Ime = red["Ime"].ToString(),
-                Prezime = red["Prezime"].ToString(),
-                Email = red["Email"].ToString(),
-                BrojTelefona = red["BrojTelefona"].ToString(),
-                Pol = red["Pol"].ToString(),
-                StatusClanarine = red["StatusClanarine"].ToString(),
+                KorisnikID = korisnik.Korisnik.KorisnikID,
+                Ime = korisnik.Korisnik.Ime,
+                Prezime = korisnik.Korisnik.Prezime,
+                Email = korisnik.Korisnik.Email,
+                BrojTelefona = korisnik.Korisnik.BrojTelefona,
+                Pol = korisnik.Korisnik.Pol,
 
-                DatumRodjenja = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumRodjenja"])),
-                DatumAktivacije = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumAktivacije"])),
-                DatumIsteka = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumIsteka"])),
+                StatusClanarine = korisnik.StatusClanarine,
+
+                DatumRodjenja = korisnik.Korisnik.DatumRodjenja,
+
+                DatumAktivacije = korisnik.DatumAktivacije,
+                DatumIsteka = korisnik.DatumIsteka,
+
                 Cena = cenaSaPopustom,
-                Popust =procenatPopusta,
-                ZahtevZaProduzenje = Convert.ToBoolean(red["ZahtevZaProduzenje"])
+                Popust = procenatPopusta,
+
+                ZahtevZaProduzenje = korisnik.ZahtevZaProduzenje
             };
 
-
-                return View(model);
-
-
-		}
+            return View(model);
+        }
 
         [HttpPost]
         public IActionResult OdbijZahtev(int korisnikID)

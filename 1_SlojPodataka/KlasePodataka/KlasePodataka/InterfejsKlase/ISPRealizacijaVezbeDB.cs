@@ -16,19 +16,19 @@ namespace KlasePodataka.InterfejsKlase
 
         bool ObrisiRealizacijuVezbe(RealizacijaVezbeKlasa realizacijaZaBrisanje, int korisnikID);
 
-        DataSet DajRealizacijeVezbiZaDanasnjiDatum(DateOnly datumRealizacije, int korisnikID);
+        List<RealizacijaVezbeKlasa> DajRealizacijeVezbiZaDanasnjiDatum(DateOnly datumRealizacije, int korisnikID);
 
-        DataSet DajRealizacijuVezbePoID(int realizacijaID, int korisnikID);
+        RealizacijaVezbeKlasa DajRealizacijuVezbePoID(int realizacijaID, int korisnikID);
 
-        DataSet DajSveRealizacijeVezbi(int korisnikID);
+        List<RealizacijaVezbeKlasa> DajSveRealizacijeVezbi(int korisnikID);
 
         bool ObrisiSveRealizacijeZaDatum(DateOnly datum, int korisnikID);
 
         int DajBrojRealizacijaZaMesec(int korisnikID, int mesec, int godina);
 
-        DataSet DajRealizacijePoDatumu(DateOnly datum, int korisnikID);
+        List<RealizacijaVezbeKlasa> DajRealizacijePoDatumu(DateOnly datum, int korisnikID);
 
-        DataSet DajRealizacijeZaPeriod(int korisnikID, DateOnly datumOd, DateOnly datumDo);
+        List<RealizacijaVezbeKlasa> DajRealizacijeZaPeriod(int korisnikID, DateOnly datumOd, DateOnly datumDo);
 
 
     }

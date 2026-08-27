@@ -55,7 +55,7 @@ namespace KlasePoslovneLogike
             return _spRealizacijaVezbeDB.ObrisiSveRealizacijeZaDatum(datum, prijavljeniKorisnik.KorisnikID);
         }
 
-        public DataSet DajSveRealizacijeKorisnika(KorisnikKlasa prijavljeniKorisnik)
+        public List<RealizacijaVezbeKlasa> DajSveRealizacijeKorisnika(KorisnikKlasa prijavljeniKorisnik)
         {
             if (prijavljeniKorisnik == null)
             {
@@ -65,7 +65,7 @@ namespace KlasePoslovneLogike
             return _spRealizacijaVezbeDB.DajSveRealizacijeVezbi(prijavljeniKorisnik.KorisnikID);
         }
 
-        public DataSet DajRealizacijeZaDanas(KorisnikKlasa prijavljeniKorisnik)
+        public List<RealizacijaVezbeKlasa> DajRealizacijeZaDanas(KorisnikKlasa prijavljeniKorisnik)
         {
             if (prijavljeniKorisnik == null)
             {
@@ -77,7 +77,7 @@ namespace KlasePoslovneLogike
             return _spRealizacijaVezbeDB.DajRealizacijeVezbiZaDanasnjiDatum(danas, prijavljeniKorisnik.KorisnikID);
         }
 
-        public DataSet DajRealizacijePoDatumu(KorisnikKlasa prijavljeniKorisnik, DateOnly datum)
+        public List<RealizacijaVezbeKlasa> DajRealizacijePoDatumu(KorisnikKlasa prijavljeniKorisnik, DateOnly datum)
         {
             if (prijavljeniKorisnik == null)
             {
@@ -87,7 +87,7 @@ namespace KlasePoslovneLogike
             return _spRealizacijaVezbeDB.DajRealizacijePoDatumu(datum, prijavljeniKorisnik.KorisnikID);
         }
 
-        public DataSet DajRealizacijeZaPeriod(KorisnikKlasa prijavljeniKorisnik, DateOnly datumOd, DateOnly datumDo)
+        public List<RealizacijaVezbeKlasa> DajRealizacijeZaPeriod(KorisnikKlasa prijavljeniKorisnik, DateOnly datumOd, DateOnly datumDo)
         {
             if (prijavljeniKorisnik == null)
             {
@@ -102,7 +102,7 @@ namespace KlasePoslovneLogike
             return _spRealizacijaVezbeDB.DajRealizacijeZaPeriod(prijavljeniKorisnik.KorisnikID, datumOd, datumDo);
         }
 
-		public DataSet DajRealizacijuVezbe(KorisnikKlasa prijavljeniKorisnik, int realizacijaID)
+		public RealizacijaVezbeKlasa DajRealizacijuVezbe(KorisnikKlasa prijavljeniKorisnik, int realizacijaID)
 		{
 			if (prijavljeniKorisnik == null)
 			{

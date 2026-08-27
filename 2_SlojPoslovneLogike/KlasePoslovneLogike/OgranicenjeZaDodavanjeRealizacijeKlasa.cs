@@ -36,14 +36,9 @@ namespace KlasePoslovneLogike
 
         private bool DostignutMaksimalanBrojRealizacija(RealizacijaVezbeKlasa realizacija)
         {
-            DataSet ds = _sPRealizacijaVezbeDB.DajRealizacijePoDatumu(realizacija.DatumRealizacije, realizacija.Korisnik.KorisnikID );
+            List<RealizacijaVezbeKlasa> realizacije =_sPRealizacijaVezbeDB.DajRealizacijePoDatumu(realizacija.DatumRealizacije,realizacija.Korisnik.KorisnikID);
 
-            if (ds.Tables.Count == 0)
-            {
-                return false;
-            }
-
-            int brojRealizacija = ds.Tables[0].Rows.Count;
+            int brojRealizacija = realizacije.Count;
 
             return brojRealizacija >= 20;
         }
@@ -69,8 +64,7 @@ namespace KlasePoslovneLogike
             }
 
 
-            bool uspeh =
-                _sPRealizacijaVezbeDB.DodajNovuRealizacijuVezbe(realizacija);
+            bool uspeh = _sPRealizacijaVezbeDB.DodajNovuRealizacijuVezbe(realizacija);
 
 
             return uspeh ? "Uspesno" : "Greska";

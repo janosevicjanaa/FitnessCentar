@@ -14,7 +14,7 @@ namespace KlasePodataka.InterfejsKlase
 
         int DodajNovogKorisnika(KorisnikKlasa noviKorisnikObjekat);
 
-        DataSet DajSveKorisnike();
+        List<KorisnikKlasa> DajSveKorisnike();
 
         bool IzmeniKorisnika(KorisnikKlasa korisnikZaIzmenu);
 
@@ -22,17 +22,17 @@ namespace KlasePodataka.InterfejsKlase
 
         bool ObrisiKorisnika(KorisnikKlasa korisnikZaBrisanje);
 
-        DataSet DajSveKorisnikeSaStatusomClanarine();
+        List<ClanarinaKlasa> DajSveKorisnikeSaStatusomClanarine();
 
-        DataSet DajKorisnikePoPrezimenu(string prezime);
+        List<ClanarinaKlasa> DajKorisnikePoPrezimenu(string prezime);
 
-        DataSet DajKorisnikePoStatusuClanarine(string statusClanarine);
+        List<ClanarinaKlasa> DajKorisnikePoStatusuClanarine(string statusClanarine);
 
-        DataSet DajProfilKorisnikaZaAdmina(int korisnikID);
+        ClanarinaKlasa DajProfilKorisnikaZaAdmina(int korisnikID);
 
-        DataSet DajPodatkePocetneStrane(int korisnikID);
+        ClanarinaKlasa DajPodatkePocetneStrane(int korisnikID);
 
-        DataSet DajPodatkeZaUpravljanjeNalogom(int korisnikID);
+        KorisnikKlasa DajPodatkeZaUpravljanjeNalogom(int korisnikID);
 
 
     }

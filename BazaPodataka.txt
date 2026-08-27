@@ -1,0 +1,130 @@
+USE [master]
+GO
+
+CREATE DATABASE FitnessCentar1
+GO
+
+USE FitnessCentar1
+GO
+
+CREATE TABLE Korisnik(
+KorisnikID INT IDENTITY (1,1) NOT NULL,
+Ime NVARCHAR (30) NOT NULL,
+Prezime NVARCHAR (40) NOT NULL,
+Email NVARCHAR (100) UNIQUE NOT NULL,
+Lozinka NVARCHAR (40) NOT NULL,
+BrojTelefona NVARCHAR (20) NOT NULL,
+DatumRodjenja DATE NOT NULL,
+Pol NVARCHAR (10) NOT NULL
+	CHECK (Pol IN ('Muški', 'Ženski')),
+Uloga NVARCHAR (20) NOT NULL
+	CHECK (Uloga IN ('Administrator', 'Korisnik'))
+)
+
+GO
+
+ALTER TABLE Korisnik
+ADD CONSTRAINT PK_Korisnik PRIMARY KEY CLUSTERED 
+(
+	KorisnikID ASC 
+)
+
+GO
+
+CREATE TABLE TipVezbe (
+TipVezbeID INT IDENTITY (1,1) NOT NULL,
+NazivTipa NVARCHAR (30) NOT NULL
+)
+
+GO
+
+ALTER TABLE TipVezbe
+ADD CONSTRAINT PK_TipVezbe PRIMARY KEY CLUSTERED
+(
+	TipVezbeID ASC
+)
+
+GO
+
+
+CREATE TABLE RealizacijaVezbe (
+RealizacijaID INT IDENTITY (1,1) NOT NULL,
+NazivVezbe NVARCHAR (50) NOT NULL,
+DatumRealizacije DATE NOT NULL,
+BrojSerija INT NULL,
+BrojPonavljanja INT NULL,
+Tezina DECIMAL (5,2) NULL,
+Trajanje INT NULL,
+KorisnikID INT NOT NULL,
+TipVezbeID INT NOT NULL
+)
+
+GO
+
+ALTER TABLE RealizacijaVezbe 
+ADD CONSTRAINT PK_RealizacijaVezbe PRIMARY KEY CLUSTERED 
+(
+	RealizacijaID ASC
+)
+
+GO
+
+ALTER TABLE RealizacijaVezbe
+ADD CONSTRAINT FK_RealizacijaVezbe_Korisnik FOREIGN KEY 
+(
+	KorisnikID
+)
+REFERENCES Korisnik(KorisnikID)
+
+GO
+
+ALTER TABLE RealizacijaVezbe
+ADD CONSTRAINT FK_RealizacijaVezbe_TipVezbe FOREIGN KEY
+(
+	TipVezbeID
+)
+REFERENCES TipVezbe(TipVezbeID)
+
+GO
+
+CREATE TABLE Clanarina (
+ClanarinaID INT IDENTITY (1,1) NOT NULL,
+StatusClanarine NVARCHAR (20) NOT NULL
+	CHECK (StatusClanarine IN ( 'Aktivna', 'Istekla')),
+DatumAktivacije DATE NOT NULL,
+DatumIsteka DATE NOT NULL,
+Cena DECIMAL (10,2) NOT NULL,
+Popust DECIMAL (5,2) NOT NULL,
+ZahtevZaProduzenje BIT NOT NULL,
+KorisnikID INT NOT NULL
+)
+
+GO
+
+ALTER TABLE Clanarina
+ALTER COLUMN Popust INT;
+
+ALTER TABLE Clanarina 
+ADD CONSTRAINT PK_Clanarina PRIMARY KEY CLUSTERED 
+(
+	ClanarinaID ASC
+)
+
+GO
+
+ALTER TABLE Clanarina
+ADD CONSTRAINT FK_Clanarina_Korisnik FOREIGN KEY 
+(
+	KorisnikID
+)
+REFERENCES Korisnik(KorisnikID)
+
+GO
+
+ALTER TABLE Clanarina
+ADD CONSTRAINT UQ_Clanarina_Korisnik UNIQUE
+(
+	KorisnikID
+)
+
+GO

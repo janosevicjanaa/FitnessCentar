@@ -94,14 +94,15 @@ namespace KlasePodataka.Repository
             return brojSlogova > 0;
         }
 
-        public DataSet DajRealizacijeVezbiZaDanasnjiDatum(DateOnly datumRealizacije, int korisnikID)
+        public List<RealizacijaVezbeKlasa> DajRealizacijeVezbiZaDanasnjiDatum(DateOnly datumRealizacije, int korisnikID)
         {
             DataSet ds = new DataSet();
 
             SqlConnection pomKonekcija = new SqlConnection(_stringKonekcije);
             pomKonekcija.Open();
 
-            SqlCommand pomKomanda = new SqlCommand("DajRealizacijeVezbiZaDanasnjiDatum", pomKonekcija);
+            SqlCommand pomKomanda = new SqlCommand("DajRealizacijeVezbiZaDanasnjiDatum",pomKonekcija);
+
             pomKomanda.CommandType = CommandType.StoredProcedure;
             pomKomanda.Parameters.Add("@DatumRealizacije", SqlDbType.Date).Value = datumRealizacije;
             pomKomanda.Parameters.Add("@KorisnikID", SqlDbType.Int).Value = korisnikID;
@@ -114,44 +115,86 @@ namespace KlasePodataka.Repository
             pomKonekcija.Close();
             pomKonekcija.Dispose();
 
-            return ds;
+            List<RealizacijaVezbeKlasa> realizacije =new List<RealizacijaVezbeKlasa>();
+
+            foreach (DataRow red in ds.Tables[0].Rows)
+            {
+                realizacije.Add(new RealizacijaVezbeKlasa
+                {
+                    RealizacijaID = Convert.ToInt32(red["RealizacijaID"]),
+                    NazivVezbe = red["NazivVezbe"].ToString(),
+                    DatumRealizacije = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumRealizacije"])),
+                    BrojSerija = Convert.ToInt32(red["BrojSerija"]),
+                    BrojPonavljanja = Convert.ToInt32(red["BrojPonavljanja"]),
+                    Tezina = Convert.ToDecimal(red["Tezina"]),
+                    Trajanje = Convert.ToInt32(red["Trajanje"]),
+                    TipVezbe = new TipVezbeKlasa
+                    {
+                        TipVezbeID = Convert.ToInt32(red["TipVezbeID"]),
+                        NazivTipa = red["NazivTipa"].ToString()
+                    }
+                });
+            }
+
+            return realizacije;
         }
 
-		public DataSet DajRealizacijuVezbePoID(int realizacijaID, int korisnikID)
-		{
-			DataSet ds = new DataSet();
-
-			SqlConnection pomKonekcija = new SqlConnection(_stringKonekcije);
-
-			pomKonekcija.Open();
-
-			SqlCommand pomKomanda = new SqlCommand("DajRealizacijuVezbePoID", pomKonekcija);
-
-			pomKomanda.CommandType = CommandType.StoredProcedure;
-
-			pomKomanda.Parameters.Add("@RealizacijaID", SqlDbType.Int).Value = realizacijaID;
-
-			pomKomanda.Parameters.Add("@KorisnikID", SqlDbType.Int).Value = korisnikID;
-
-			SqlDataAdapter adapter = new SqlDataAdapter();
-			adapter.SelectCommand = pomKomanda;
-
-			adapter.Fill(ds);
-
-			pomKonekcija.Close();
-			pomKonekcija.Dispose();
-
-			return ds;
-		}
-
-		public DataSet DajSveRealizacijeVezbi(int korisnikID)
+        public RealizacijaVezbeKlasa DajRealizacijuVezbePoID(int realizacijaID, int korisnikID)
         {
             DataSet ds = new DataSet();
 
             SqlConnection pomKonekcija = new SqlConnection(_stringKonekcije);
             pomKonekcija.Open();
 
-            SqlCommand pomKomanda = new SqlCommand("DajSveRealizacijeVezbi", pomKonekcija);
+            SqlCommand pomKomanda = new SqlCommand("DajRealizacijuVezbePoID", pomKonekcija);
+
+            pomKomanda.CommandType = CommandType.StoredProcedure;
+
+            pomKomanda.Parameters.Add("@RealizacijaID", SqlDbType.Int).Value = realizacijaID;
+            pomKomanda.Parameters.Add("@KorisnikID", SqlDbType.Int).Value = korisnikID;
+
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = pomKomanda;
+
+            adapter.Fill(ds);
+
+            pomKonekcija.Close();
+            pomKonekcija.Dispose();
+
+            if (ds.Tables[0].Rows.Count == 0)
+            {
+                return null;
+            }
+
+            DataRow red = ds.Tables[0].Rows[0];
+
+            return new RealizacijaVezbeKlasa
+            {
+                RealizacijaID = Convert.ToInt32(red["RealizacijaID"]),
+                NazivVezbe = red["NazivVezbe"].ToString(),
+                DatumRealizacije = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumRealizacije"])),
+                BrojSerija = Convert.ToInt32(red["BrojSerija"]),
+                BrojPonavljanja = Convert.ToInt32(red["BrojPonavljanja"]),
+                Tezina = Convert.ToDecimal(red["Tezina"]),
+                Trajanje = Convert.ToInt32(red["Trajanje"]),
+
+                TipVezbe = new TipVezbeKlasa
+                {
+                    TipVezbeID = Convert.ToInt32(red["TipVezbeID"]),
+                    NazivTipa = red["NazivTipa"].ToString()
+                }
+            };
+        }
+
+        public List<RealizacijaVezbeKlasa> DajSveRealizacijeVezbi(int korisnikID)
+        {
+            DataSet ds = new DataSet();
+
+            SqlConnection pomKonekcija = new SqlConnection(_stringKonekcije);
+            pomKonekcija.Open();
+
+            SqlCommand pomKomanda = new SqlCommand("DajSveRealizacijeVezbi",pomKonekcija);
+
             pomKomanda.CommandType = CommandType.StoredProcedure;
             pomKomanda.Parameters.Add("@KorisnikID", SqlDbType.Int).Value = korisnikID;
 
@@ -163,7 +206,28 @@ namespace KlasePodataka.Repository
             pomKonekcija.Close();
             pomKonekcija.Dispose();
 
-            return ds;
+            List<RealizacijaVezbeKlasa> realizacije =new List<RealizacijaVezbeKlasa>();
+
+            foreach (DataRow red in ds.Tables[0].Rows)
+            {
+                realizacije.Add(new RealizacijaVezbeKlasa
+                {
+                    RealizacijaID = Convert.ToInt32(red["RealizacijaID"]),
+                    NazivVezbe = red["NazivVezbe"].ToString(),
+                    DatumRealizacije = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumRealizacije"])),
+                    BrojSerija = Convert.ToInt32(red["BrojSerija"]),
+                    BrojPonavljanja = Convert.ToInt32(red["BrojPonavljanja"]),
+                    Tezina = Convert.ToDecimal(red["Tezina"]),
+                    Trajanje = Convert.ToInt32(red["Trajanje"]),
+
+                    TipVezbe = new TipVezbeKlasa
+                    {
+                        NazivTipa = red["NazivTipa"].ToString()
+                    }
+                });
+            }
+
+            return realizacije;
         }
 
         public bool ObrisiSveRealizacijeZaDatum(DateOnly datum, int korisnikID)
@@ -214,14 +278,15 @@ namespace KlasePodataka.Repository
             return brojRealizacija;
         }
 
-        public DataSet DajRealizacijePoDatumu(DateOnly datum, int korisnikID)
+        public List<RealizacijaVezbeKlasa> DajRealizacijePoDatumu(DateOnly datum, int korisnikID)
         {
             DataSet ds = new DataSet();
 
             SqlConnection pomKonekcija = new SqlConnection(_stringKonekcije);
             pomKonekcija.Open();
 
-            SqlCommand pomKomanda = new SqlCommand("DajRealizacijePoDatumu", pomKonekcija);
+            SqlCommand pomKomanda = new SqlCommand("DajRealizacijePoDatumu",pomKonekcija);
+
             pomKomanda.CommandType = CommandType.StoredProcedure;
             pomKomanda.Parameters.Add("@DatumRealizacije", SqlDbType.Date).Value = datum;
             pomKomanda.Parameters.Add("@KorisnikID", SqlDbType.Int).Value = korisnikID;
@@ -234,18 +299,41 @@ namespace KlasePodataka.Repository
             pomKonekcija.Close();
             pomKonekcija.Dispose();
 
-            return ds;
+            List<RealizacijaVezbeKlasa> realizacije =new List<RealizacijaVezbeKlasa>();
+
+            foreach (DataRow red in ds.Tables[0].Rows)
+            {
+                realizacije.Add(new RealizacijaVezbeKlasa
+                {
+                    RealizacijaID = Convert.ToInt32(red["RealizacijaID"]),
+                    NazivVezbe = red["NazivVezbe"].ToString(),
+                    DatumRealizacije = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumRealizacije"])),
+                    BrojSerija = Convert.ToInt32(red["BrojSerija"]),
+                    BrojPonavljanja = Convert.ToInt32(red["BrojPonavljanja"]),
+                    Tezina = Convert.ToDecimal(red["Tezina"]),
+                    Trajanje = Convert.ToInt32(red["Trajanje"]),
+
+                    TipVezbe = new TipVezbeKlasa
+                    {
+                        NazivTipa = red["NazivTipa"].ToString()
+                    }
+                });
+            }
+
+            return realizacije;
         }
 
-        public DataSet DajRealizacijeZaPeriod(int korisnikID, DateOnly datumOd, DateOnly datumDo)
+        public List<RealizacijaVezbeKlasa> DajRealizacijeZaPeriod(int korisnikID, DateOnly datumOd, DateOnly datumDo)
         {
             DataSet ds = new DataSet();
 
             SqlConnection pomKonekcija = new SqlConnection(_stringKonekcije);
             pomKonekcija.Open();
 
-            SqlCommand pomKomanda = new SqlCommand("DajRealizacijeZaPeriod", pomKonekcija);
+            SqlCommand pomKomanda = new SqlCommand("DajRealizacijeZaPeriod",pomKonekcija);
+
             pomKomanda.CommandType = CommandType.StoredProcedure;
+
             pomKomanda.Parameters.Add("@KorisnikID", SqlDbType.Int).Value = korisnikID;
             pomKomanda.Parameters.Add("@DatumOd", SqlDbType.Date).Value = datumOd;
             pomKomanda.Parameters.Add("@DatumDo", SqlDbType.Date).Value = datumDo;
@@ -258,7 +346,28 @@ namespace KlasePodataka.Repository
             pomKonekcija.Close();
             pomKonekcija.Dispose();
 
-            return ds;
+            List<RealizacijaVezbeKlasa> realizacije = new List<RealizacijaVezbeKlasa>();
+
+            foreach (DataRow red in ds.Tables[0].Rows)
+            {
+                realizacije.Add(new RealizacijaVezbeKlasa
+                {
+                    RealizacijaID = Convert.ToInt32(red["RealizacijaID"]),
+                    NazivVezbe = red["NazivVezbe"].ToString(),
+                    DatumRealizacije = DateOnly.FromDateTime( Convert.ToDateTime(red["DatumRealizacije"])),
+                    BrojSerija = Convert.ToInt32(red["BrojSerija"]),
+                    BrojPonavljanja = Convert.ToInt32(red["BrojPonavljanja"]),
+                    Tezina = Convert.ToDecimal(red["Tezina"]),
+                    Trajanje = Convert.ToInt32(red["Trajanje"]),
+
+                    TipVezbe = new TipVezbeKlasa
+                    {
+                        NazivTipa = red["NazivTipa"].ToString()
+                    }
+                });
+            }
+
+            return realizacije;
         }
 
 

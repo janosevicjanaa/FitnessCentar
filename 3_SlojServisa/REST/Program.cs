@@ -44,7 +44,7 @@ app.MapGet("/api/popust/parametri", () =>
     })
     .ToList();
 
-    if (rezultat.Count == null)
+    if (rezultat.Count == 0)
     {
         return Results.NotFound("Parametri popusta nisu pronadjeni.");
     }

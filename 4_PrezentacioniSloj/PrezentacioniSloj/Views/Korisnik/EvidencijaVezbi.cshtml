@@ -63,7 +63,7 @@
 	<button class="ne-stampaj dugme-drugo evidencija" type="button" onclick="window.print()">Štampaj evidenciju</button>
 
 	<form asp-action="IzbrisiSve" method="post">
-		<input type="hidden" name="datum" value="@Model.Datum" />
+		<input type="hidden" name="datum" value="@Model.Datum.ToString("yyyy-MM-dd")" />
 		<button class="ne-stampaj dugme-trece evidencija" type="submit">Izbriši evidenciju</button>
 	</form>
 

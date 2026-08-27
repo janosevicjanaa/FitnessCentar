@@ -63,12 +63,12 @@ namespace KlasePoslovneLogike
             return _spKorisnikDB.ObrisiKorisnika(korisnikZaBrisanje);
         }
 
-        public DataSet DajPodatkeKorisnika(int korisnikID)
+        public ClanarinaKlasa DajPodatkeKorisnika(int korisnikID)
         {
             return _spKorisnikDB.DajPodatkePocetneStrane(korisnikID);
         }
 
-        public DataSet DajPodatkeZaUpravljanjeNalogom(int korisnikID)
+        public KorisnikKlasa DajPodatkeZaUpravljanjeNalogom(int korisnikID)
         {
             return _spKorisnikDB.DajPodatkeZaUpravljanjeNalogom(korisnikID);
         }

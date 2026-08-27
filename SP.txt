@@ -1,0 +1,579 @@
+USE master
+GO
+
+USE FitnessCentar1
+GO
+
+CREATE PROCEDURE DajKorisnikaPoEmailuILozinci
+(
+	@Email NVARCHAR(100),
+	@Lozinka NVARCHAR(40)
+)
+AS
+BEGIN
+SELECT * FROM Korisnik
+WHERE 
+Email = @Email
+AND
+Lozinka = @Lozinka
+END
+GO
+
+CREATE PROCEDURE DodajNovogKorisnika
+(
+	@Ime NVARCHAR (30),
+	@Prezime NVARCHAR (40),
+	@Email NVARCHAR (100),
+	@Lozinka NVARCHAR (40),
+	@BrojTelefona NVARCHAR (20),
+	@DatumRodjenja DATE,
+	@Pol NVARCHAR (10) 
+	
+)
+AS
+BEGIN
+INSERT INTO Korisnik
+(
+	Ime,
+	Prezime,
+	Email,
+	Lozinka,
+	BrojTelefona,
+	DatumRodjenja,
+	Pol,
+	Uloga
+)
+VALUES
+(
+	@Ime,
+	@Prezime,
+	@Email,
+	@Lozinka,
+	@BrojTelefona,
+	@DatumRodjenja,
+	@Pol,
+	'Korisnik'
+)
+SELECT SCOPE_IDENTITY() AS KorisnikID
+END
+GO
+
+CREATE PROCEDURE DajSveKorisnike
+AS
+BEGIN
+SELECT * FROM Korisnik
+END
+GO
+
+CREATE PROCEDURE IzmeniKorisnika
+(
+	@KorisnikID INT,
+	@Ime NVARCHAR (30),
+	@Prezime NVARCHAR (40),
+	@Email NVARCHAR (100),
+	@BrojTelefona NVARCHAR (20),
+	@DatumRodjenja DATE,
+	@Pol NVARCHAR (10)
+)
+AS
+BEGIN
+UPDATE Korisnik
+SET
+	Ime=@Ime,
+	Prezime=@Prezime,
+	Email=@Email,
+	BrojTelefona=@BrojTelefona,
+	DatumRodjenja=@DatumRodjenja,
+	Pol=@Pol
+WHERE KorisnikID=@KorisnikID
+END 
+GO
+
+CREATE PROCEDURE IzmeniLozinkuKorisnika
+(
+	@KorisnikID INT,
+	@StaraLozinka NVARCHAR(40),
+	@NovaLozinka NVARCHAR(40)
+)
+AS
+BEGIN
+UPDATE Korisnik
+SET 
+Lozinka=@NovaLozinka
+WHERE Lozinka=@StaraLozinka AND KorisnikID=@KorisnikID
+END
+GO
+
+CREATE PROCEDURE ObrisiKorisnika
+(
+	@KorisnikID INT
+)
+AS
+BEGIN
+
+	DELETE FROM RealizacijaVezbe 
+	WHERE KorisnikID=@KorisnikID
+
+	DELETE FROM Clanarina
+	WHERE KorisnikID=@KorisnikID
+
+	DELETE FROM Korisnik
+	WHERE KorisnikID=@KorisnikID
+
+END
+GO	
+
+CREATE PROCEDURE DajSveTipoveVezbi
+AS
+BEGIN
+SELECT * FROM TipVezbe
+END
+GO
+
+CREATE PROCEDURE DodajNovuRealizacijuVezbe
+(
+	@NazivVezbe NVARCHAR (50),
+	@DatumRealizacije DATE,
+	@BrojSerija INT,
+	@BrojPonavljanja INT,
+	@Tezina DECIMAL (5,2),
+	@Trajanje INT,
+	@KorisnikID INT,
+	@TipVezbeID INT
+)
+AS
+BEGIN
+	INSERT INTO RealizacijaVezbe
+	(
+		NazivVezbe,
+		DatumRealizacije,
+		BrojSerija,
+		BrojPonavljanja,
+		Tezina,
+		Trajanje,
+		KorisnikID,
+		TipVezbeID
+	)
+	VALUES 
+	(
+		@NazivVezbe,
+		@DatumRealizacije,
+		@BrojSerija,
+		@BrojPonavljanja,
+		@Tezina,
+		@Trajanje,
+		@KorisnikID,
+		@TipVezbeID
+	)
+END
+GO
+
+CREATE PROCEDURE IzmeniRealizacijuVezbe
+(
+	@RealizacijaID INT,
+	@NazivVezbe NVARCHAR (50),
+	@DatumRealizacije DATE,
+	@BrojSerija INT,
+	@BrojPonavljanja INT,
+	@Tezina DECIMAL (5,2),
+	@Trajanje INT,
+	@KorisnikID INT,
+	@TipVezbeID INT
+)
+AS
+BEGIN
+	UPDATE RealizacijaVezbe
+	SET 
+		NazivVezbe=@NazivVezbe,
+		DatumRealizacije=@DatumRealizacije,
+		BrojSerija=@BrojSerija,
+		BrojPonavljanja=@BrojPonavljanja,
+		Tezina=@Tezina,
+		Trajanje=@Trajanje,
+		TipVezbeID=@TipVezbeID
+
+	WHERE RealizacijaID = @RealizacijaID AND KorisnikID=@KorisnikID
+END
+GO
+
+CREATE PROCEDURE ObrisiRealizacijuVezbe
+(
+	@RealizacijaID INT,
+	@KorisnikID INT
+	
+)
+AS
+BEGIN
+	DELETE FROM RealizacijaVezbe
+	WHERE RealizacijaID=@RealizacijaID AND KorisnikID=@KorisnikID
+END
+GO
+
+CREATE PROCEDURE DajRealizacijeVezbiZaDanasnjiDatum
+(
+	
+	@DatumRealizacije DATE,
+	@KorisnikID INT
+	
+)
+AS
+BEGIN
+	SELECT 
+		R.RealizacijaID,
+		R.NazivVezbe,
+		R.DatumRealizacije,
+		R.BrojSerija,
+		R.BrojPonavljanja,
+		R.Tezina,
+		R.Trajanje,
+		T.TipVezbeID,
+		T.NazivTipa 
+	FROM RealizacijaVezbe R INNER JOIN TipVezbe T
+	ON R.TipVezbeID = T.TipVezbeID
+	WHERE DatumRealizacije=@DatumRealizacije AND KorisnikID=@KorisnikID
+END
+GO
+
+CREATE PROCEDURE DajRealizacijuVezbePoID
+(
+    @RealizacijaID INT,
+    @KorisnikID INT
+)
+AS
+BEGIN
+    SELECT
+        R.RealizacijaID,
+        R.NazivVezbe,
+        R.DatumRealizacije,
+        R.BrojSerija,
+        R.BrojPonavljanja,
+        R.Tezina,
+        R.Trajanje,
+        T.TipVezbeID,
+        T.NazivTipa
+    FROM RealizacijaVezbe R
+    INNER JOIN TipVezbe T
+        ON R.TipVezbeID = T.TipVezbeID
+    WHERE R.RealizacijaID = @RealizacijaID
+      AND R.KorisnikID = @KorisnikID
+END
+GO
+
+
+CREATE PROCEDURE DajSveRealizacijeVezbi
+(
+	@KorisnikID INT
+)
+AS
+BEGIN
+	SELECT 
+		R.RealizacijaID,
+		R.NazivVezbe,
+		R.DatumRealizacije,
+		T.NazivTipa,
+		R.BrojSerija,
+		R.BrojPonavljanja,
+		R.Tezina,
+		R.Trajanje 
+	FROM 
+	RealizacijaVezbe R
+	INNER JOIN TipVezbe T
+	ON R.TipVezbeID = T.TipVezbeID
+	WHERE R.KorisnikID=@KorisnikID
+	ORDER BY R.DatumRealizacije DESC
+END
+GO
+
+CREATE PROCEDURE ObrisiSveRealizacijeZaDatum
+(
+	@KorisnikID INT,
+	@DatumRealizacije DATE
+)
+AS
+BEGIN
+	DELETE FROM RealizacijaVezbe
+	WHERE KorisnikID=@KorisnikID AND DatumRealizacije=@DatumRealizacije
+END
+GO
+
+CREATE PROCEDURE DajBrojRealizacijaZaMesec
+(
+	@KorisnikID INT,
+	@Mesec INT,
+	@Godina INT
+)
+AS
+BEGIN
+	SELECT COUNT (*) AS BrojRealizacija 
+	FROM RealizacijaVezbe
+	WHERE
+	KorisnikID=@KorisnikID
+	AND MONTH(DatumRealizacije)=@Mesec
+	AND YEAR(DatumRealizacije)=@Godina
+END
+GO
+
+CREATE PROCEDURE DajRealizacijePoDatumu
+(
+	@KorisnikID INT,
+	@DatumRealizacije DATE
+)
+AS
+BEGIN
+	SELECT
+		R.RealizacijaID,
+        R.NazivVezbe,
+        R.DatumRealizacije,
+        T.NazivTipa,
+        R.BrojSerija,
+        R.BrojPonavljanja,
+        R.Tezina,
+        R.Trajanje
+	FROM RealizacijaVezbe R
+	INNER JOIN TipVezbe T
+	ON R.TipVezbeID=T.TipVezbeID
+	WHERE R.KorisnikId=@KorisnikID
+	AND R.DatumRealizacije=@DatumRealizacije
+END
+GO
+
+CREATE PROCEDURE DajRealizacijeZaPeriod
+(
+@KorisnikID INT,
+@DatumOd DATE,
+@DatumDo DATE
+)
+AS
+BEGIN
+
+SELECT
+    R.RealizacijaID,
+    R.NazivVezbe,
+    R.DatumRealizacije,
+    T.NazivTipa,
+    R.BrojSerija,
+    R.BrojPonavljanja,
+    R.Tezina,
+    R.Trajanje
+FROM RealizacijaVezbe R
+INNER JOIN TipVezbe T
+ON R.TipVezbeID = T.TipVezbeID
+WHERE R.KorisnikID = @KorisnikID
+AND R.DatumRealizacije BETWEEN @DatumOd AND @DatumDo
+ORDER BY R.DatumRealizacije
+
+END
+GO
+
+CREATE PROCEDURE DajClanarinuKorisnika
+(
+	@KorisnikID iNT
+)
+AS
+BEGIN
+	SELECT 
+		StatusClanarine,
+        DatumAktivacije,
+        DatumIsteka,
+        Cena,
+        Popust,
+        ZahtevZaProduzenje
+	FROM Clanarina
+	WHERE KorisnikId=@KorisnikID
+END
+GO
+
+CREATE PROCEDURE KreirajClanarinuKorisnika
+(
+    @KorisnikID INT,
+	@Cena DECIMAL (10,2),
+	@Popust INT
+)
+AS
+BEGIN
+    INSERT INTO Clanarina
+    (
+        StatusClanarine,
+        DatumAktivacije,
+        DatumIsteka,
+        Cena,
+        Popust,
+        ZahtevZaProduzenje,
+        KorisnikID
+    )
+    VALUES
+    (
+        'Aktivna',
+        GETDATE(),
+        DATEADD(DAY,30,GETDATE()),
+        @Cena,
+        @Popust,
+        0,
+        @KorisnikID
+    )
+END
+GO
+
+CREATE PROCEDURE PosaljiZahtevZaProduzenje
+(
+    @KorisnikID INT
+)
+AS
+BEGIN
+    UPDATE Clanarina
+    SET ZahtevZaProduzenje = 1
+    WHERE KorisnikID=@KorisnikID
+END
+GO
+
+CREATE PROCEDURE PotvrdiUplatuClanarine
+(
+    @KorisnikID INT,
+	@Cena DECIMAL (10,2),
+	@Popust INT
+)
+AS
+BEGIN
+    UPDATE Clanarina
+    SET 
+        StatusClanarine='Aktivna',
+        DatumAktivacije=GETDATE(),
+        DatumIsteka=DATEADD(DAY,30,GETDATE()),
+		Cena=@Cena,
+		Popust=@Popust,
+        ZahtevZaProduzenje=0
+    WHERE KorisnikID=@KorisnikID
+END
+GO
+
+CREATE PROCEDURE OdbijZahtevZaProduzenje
+(
+    @KorisnikID INT
+)
+AS
+BEGIN
+    UPDATE Clanarina
+    SET ZahtevZaProduzenje=0
+    WHERE KorisnikID=@KorisnikID
+END
+GO
+
+CREATE PROCEDURE DajSveKorisnikeSaStatusomClanarine
+AS
+BEGIN
+    SELECT 
+        K.KorisnikID,
+        K.Ime,
+        K.Prezime,
+        K.Email,
+        C.StatusClanarine
+    FROM Korisnik K
+    INNER JOIN Clanarina C
+        ON K.KorisnikID = C.KorisnikID
+END
+GO
+
+
+CREATE PROCEDURE DajKorisnikePoPrezimenu
+(
+    @Prezime NVARCHAR(40)
+)
+AS
+BEGIN
+    SELECT 
+        K.KorisnikID,
+        K.Ime,
+        K.Prezime,
+        K.Email,
+        C.StatusClanarine
+    FROM Korisnik K
+    INNER JOIN Clanarina C
+        ON K.KorisnikID = C.KorisnikID
+    WHERE K.Prezime LIKE @Prezime + '%'
+END
+GO
+
+CREATE PROCEDURE DajKorisnikePoStatusuClanarine
+(
+    @Status NVARCHAR(20)
+)
+AS
+BEGIN
+    SELECT 
+        K.KorisnikID,
+        K.Ime,
+        K.Prezime,
+        K.Email,
+        C.StatusClanarine
+    FROM Korisnik K
+    INNER JOIN Clanarina C
+        ON K.KorisnikID = C.KorisnikID
+    WHERE C.StatusClanarine=@Status
+END
+GO
+
+CREATE PROCEDURE DajProfilKorisnikaZaAdmina
+(
+    @KorisnikID INT
+)
+AS
+BEGIN
+    SELECT
+		K.KorisnikID,
+        K.Ime,
+        K.Prezime,
+        K.Email,
+        K.BrojTelefona,
+        K.DatumRodjenja,
+        K.Pol,
+        C.StatusClanarine,
+        C.DatumAktivacije,
+        C.DatumIsteka,
+        C.Cena,
+        C.Popust,
+		C.ZahtevZaProduzenje
+    FROM Korisnik K
+    INNER JOIN Clanarina C
+        ON K.KorisnikID=C.KorisnikID
+    WHERE K.KorisnikID=@KorisnikID
+END
+GO
+
+
+
+CREATE PROCEDURE DajPodatkePocetneStrane
+(
+    @KorisnikID INT
+)
+AS
+BEGIN
+    SELECT
+        K.Ime,
+        K.Prezime,
+        C.StatusClanarine
+    FROM Korisnik K
+    INNER JOIN Clanarina C
+        ON K.KorisnikID = C.KorisnikID
+    WHERE K.KorisnikID = @KorisnikID
+END
+GO
+
+CREATE PROCEDURE DajPodatkeZaUpravljanjeNalogom
+(
+    @KorisnikID INT
+)
+AS
+BEGIN
+    SELECT
+        Ime,
+        Prezime,
+        Email,
+        BrojTelefona,
+        DatumRodjenja,
+        Pol
+    FROM Korisnik
+    WHERE KorisnikID = @KorisnikID
+END
+GO
+
+

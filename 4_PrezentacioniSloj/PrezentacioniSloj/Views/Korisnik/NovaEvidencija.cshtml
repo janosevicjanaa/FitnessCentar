@@ -8,17 +8,15 @@
         </form>
     </div>
     
-    @if (TempData["PorukaRealizacija"] != null)
+    @if (TempData["PorukaRealizacije"] != null)
     {
         <div>
-            @TempData["PorukaRealizacija"]
+            @TempData["PorukaRealizacije"]
         </div>
     }
 
     @{
-        var datum = Model.Datum.ToString(
-        "dddd, d. MMMM, yyyy",
-        new System.Globalization.CultureInfo("sr-Latn-RS"));
+        var datum = Model.Datum.ToString("dddd, d. MMMM, yyyy",new System.Globalization.CultureInfo("sr-Latn-RS"));
 
         datum = char.ToUpper(datum[0]) + datum.Substring(1);
     }

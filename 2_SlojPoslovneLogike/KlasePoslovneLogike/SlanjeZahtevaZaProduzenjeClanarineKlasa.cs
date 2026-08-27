@@ -68,8 +68,7 @@ namespace KlasePoslovneLogike
 
         public string PotvrdiUplatu(int korisnikID)
         {
-            ClanarinaKlasa clanarina =
-                _spClanarinaDB.DajClanarinuKorisnika(korisnikID);
+            ClanarinaKlasa clanarina = _spClanarinaDB.DajClanarinuKorisnika(korisnikID);
 
 
             if (clanarina == null)

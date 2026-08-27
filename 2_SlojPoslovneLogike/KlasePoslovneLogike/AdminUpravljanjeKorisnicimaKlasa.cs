@@ -1,10 +1,6 @@
-﻿using KlasePodataka.InterfejsKlase;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using KlasePodataka.EntitetKlase;
+using KlasePodataka.InterfejsKlase;
+
 
 namespace KlasePoslovneLogike
 {
@@ -18,13 +14,13 @@ namespace KlasePoslovneLogike
         }
 
 
-        public DataSet DajSveKorisnikeSaStatusomClanarine ()
+        public List<ClanarinaKlasa> DajSveKorisnikeSaStatusomClanarine ()
         {
 
             return _spKorisnikDB.DajSveKorisnikeSaStatusomClanarine();
         }
 
-        public DataSet DajKorisnikePoPrezimenu(string prezime)
+        public List<ClanarinaKlasa> DajKorisnikePoPrezimenu(string prezime)
         {
 
             if (string.IsNullOrWhiteSpace(prezime))
@@ -35,7 +31,7 @@ namespace KlasePoslovneLogike
             return _spKorisnikDB.DajKorisnikePoPrezimenu(prezime);
         }
 
-        public DataSet DajKorisnikePoStatusuClanarine(string status)
+        public List<ClanarinaKlasa> DajKorisnikePoStatusuClanarine(string status)
         {
 
             if (string.IsNullOrWhiteSpace(status))
@@ -46,7 +42,7 @@ namespace KlasePoslovneLogike
             return _spKorisnikDB.DajKorisnikePoStatusuClanarine(status);
         }
 
-        public DataSet DajProfilKorisnikaZaAdmina(int korisnikID)
+        public ClanarinaKlasa DajProfilKorisnikaZaAdmina(int korisnikID)
         {
 
             if (korisnikID <= 0)

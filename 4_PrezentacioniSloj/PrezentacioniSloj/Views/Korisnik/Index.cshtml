@@ -24,11 +24,7 @@
     </form>
 
     @{
-        var datum = Model.DanasnjiDatum.ToString(
-        "dddd, d. MMMM, yyyy",
-        new System.Globalization.CultureInfo("sr-Latn-RS")
-        );
-
+        var datum = Model.DanasnjiDatum.ToString("dddd, d. MMMM, yyyy", new System.Globalization.CultureInfo("sr-Latn-RS"));
         datum = char.ToUpper(datum[0]) + datum.Substring(1);
     }
 

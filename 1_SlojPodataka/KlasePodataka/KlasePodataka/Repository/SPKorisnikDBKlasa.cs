@@ -97,7 +97,7 @@ namespace KlasePodataka.Repository
 
         }
 
-        public DataSet DajSveKorisnike()
+       public List<KorisnikKlasa> DajSveKorisnike()
         {
             DataSet ds = new DataSet();
 
@@ -115,7 +115,25 @@ namespace KlasePodataka.Repository
             pomKonekcija.Close();
             pomKonekcija.Dispose();
 
-            return ds;
+            List<KorisnikKlasa> korisnici = new List<KorisnikKlasa>();
+
+            foreach (DataRow red in ds.Tables[0].Rows)
+            {
+                korisnici.Add(new KorisnikKlasa
+                {
+                    KorisnikID = Convert.ToInt32(red["KorisnikID"]),
+                    Ime = red["Ime"].ToString(),
+                    Prezime = red["Prezime"].ToString(),
+                    Email = red["Email"].ToString(),
+                    Lozinka = red["Lozinka"].ToString(),
+                    BrojTelefona = red["BrojTelefona"].ToString(),
+                    DatumRodjenja = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumRodjenja"])),
+                    Pol = red["Pol"].ToString(),
+                    Uloga = red["Uloga"].ToString()
+                });
+            }
+
+            return korisnici;
         }
 
         public bool IzmeniKorisnika(KorisnikKlasa korisnikZaIzmenu)
@@ -187,14 +205,15 @@ namespace KlasePodataka.Repository
             return brojSlogova > 0;
         }
 
-        public DataSet DajSveKorisnikeSaStatusomClanarine()
+        public List<ClanarinaKlasa> DajSveKorisnikeSaStatusomClanarine()
         {
             DataSet ds = new DataSet();
 
             SqlConnection pomKonekcija = new SqlConnection(_stringKonekcije);
             pomKonekcija.Open();
 
-            SqlCommand pomKomanda = new SqlCommand("DajSveKorisnikeSaStatusomClanarine", pomKonekcija);
+            SqlCommand pomKomanda = new SqlCommand("DajSveKorisnikeSaStatusomClanarine",pomKonekcija);
+
             pomKomanda.CommandType = CommandType.StoredProcedure;
 
             SqlDataAdapter adapter = new SqlDataAdapter();
@@ -205,10 +224,28 @@ namespace KlasePodataka.Repository
             pomKonekcija.Close();
             pomKonekcija.Dispose();
 
-            return ds;
+            List<ClanarinaKlasa> korisnici = new List<ClanarinaKlasa>();
+
+            foreach (DataRow red in ds.Tables[0].Rows)
+            {
+                korisnici.Add(new ClanarinaKlasa
+                {
+                    StatusClanarine = red["StatusClanarine"].ToString(),
+
+                    Korisnik = new KorisnikKlasa
+                    {
+                        KorisnikID = Convert.ToInt32(red["KorisnikID"]),
+                        Ime = red["Ime"].ToString(),
+                        Prezime = red["Prezime"].ToString(),
+                        Email = red["Email"].ToString()
+                    }
+                });
+            }
+
+            return korisnici;
         }
 
-        public DataSet DajKorisnikePoPrezimenu(string prezime)
+        public List<ClanarinaKlasa> DajKorisnikePoPrezimenu(string prezime)
         {
             DataSet ds = new DataSet();
 
@@ -216,7 +253,9 @@ namespace KlasePodataka.Repository
             pomKonekcija.Open();
 
             SqlCommand pomKomanda = new SqlCommand("DajKorisnikePoPrezimenu", pomKonekcija);
+
             pomKomanda.CommandType = CommandType.StoredProcedure;
+
             pomKomanda.Parameters.Add("@Prezime", SqlDbType.NVarChar).Value = prezime;
 
             SqlDataAdapter adapter = new SqlDataAdapter();
@@ -227,17 +266,36 @@ namespace KlasePodataka.Repository
             pomKonekcija.Close();
             pomKonekcija.Dispose();
 
-            return ds;
+            List<ClanarinaKlasa> korisnici = new List<ClanarinaKlasa>();
+
+            foreach (DataRow red in ds.Tables[0].Rows)
+            {
+                korisnici.Add(new ClanarinaKlasa
+                {
+                    StatusClanarine = red["StatusClanarine"].ToString(),
+
+                    Korisnik = new KorisnikKlasa
+                    {
+                        KorisnikID = Convert.ToInt32(red["KorisnikID"]),
+                        Ime = red["Ime"].ToString(),
+                        Prezime = red["Prezime"].ToString(),
+                        Email = red["Email"].ToString()
+                    }
+                });
+            }
+
+            return korisnici;
         }
 
-        public DataSet DajKorisnikePoStatusuClanarine(string statusClanarine)
+        public List<ClanarinaKlasa> DajKorisnikePoStatusuClanarine(string statusClanarine)
         {
             DataSet ds = new DataSet();
 
             SqlConnection pomKonekcija = new SqlConnection(_stringKonekcije);
             pomKonekcija.Open();
 
-            SqlCommand pomKomanda = new SqlCommand("DajKorisnikePoStatusuClanarine", pomKonekcija);
+            SqlCommand pomKomanda = new SqlCommand("DajKorisnikePoStatusuClanarine",pomKonekcija);
+
             pomKomanda.CommandType = CommandType.StoredProcedure;
             pomKomanda.Parameters.Add("@Status", SqlDbType.NVarChar).Value = statusClanarine;
 
@@ -249,17 +307,36 @@ namespace KlasePodataka.Repository
             pomKonekcija.Close();
             pomKonekcija.Dispose();
 
-            return ds;
+            List<ClanarinaKlasa> korisnici = new List<ClanarinaKlasa>();
+
+            foreach (DataRow red in ds.Tables[0].Rows)
+            {
+                korisnici.Add(new ClanarinaKlasa
+                {
+                    StatusClanarine = red["StatusClanarine"].ToString(),
+
+                    Korisnik = new KorisnikKlasa
+                    {
+                        KorisnikID = Convert.ToInt32(red["KorisnikID"]),
+                        Ime = red["Ime"].ToString(),
+                        Prezime = red["Prezime"].ToString(),
+                        Email = red["Email"].ToString()
+                    }
+                });
+            }
+
+            return korisnici;
         }
 
-        public DataSet DajProfilKorisnikaZaAdmina(int korisnikID)
+        public ClanarinaKlasa DajProfilKorisnikaZaAdmina(int korisnikID)
         {
             DataSet ds = new DataSet();
 
             SqlConnection pomKonekcija = new SqlConnection(_stringKonekcije);
             pomKonekcija.Open();
 
-            SqlCommand pomKomanda = new SqlCommand("DajProfilKorisnikaZaAdmina", pomKonekcija);
+            SqlCommand pomKomanda = new SqlCommand("DajProfilKorisnikaZaAdmina",pomKonekcija);
+
             pomKomanda.CommandType = CommandType.StoredProcedure;
             pomKomanda.Parameters.Add("@KorisnikID", SqlDbType.Int).Value = korisnikID;
 
@@ -271,17 +348,47 @@ namespace KlasePodataka.Repository
             pomKonekcija.Close();
             pomKonekcija.Dispose();
 
-            return ds;
+            if (ds.Tables[0].Rows.Count == 0)
+            {
+                return null;
+            }
+
+            DataRow red = ds.Tables[0].Rows[0];
+
+            return new ClanarinaKlasa
+            {
+                StatusClanarine = red["StatusClanarine"].ToString(),
+
+                DatumAktivacije = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumAktivacije"])),
+
+                DatumIsteka = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumIsteka"])),
+
+                Cena = Convert.ToDecimal(red["Cena"]),
+                Popust = Convert.ToInt32(red["Popust"]),
+                ZahtevZaProduzenje = Convert.ToBoolean(red["ZahtevZaProduzenje"]),
+
+                Korisnik = new KorisnikKlasa
+                {
+                    KorisnikID = Convert.ToInt32(red["KorisnikID"]),
+                    Ime = red["Ime"].ToString(),
+                    Prezime = red["Prezime"].ToString(),
+                    Email = red["Email"].ToString(),
+                    BrojTelefona = red["BrojTelefona"].ToString(),
+                    DatumRodjenja = DateOnly.FromDateTime(Convert.ToDateTime(red["DatumRodjenja"])),
+                    Pol = red["Pol"].ToString()
+                }
+            };
         }
 
-        public DataSet DajPodatkePocetneStrane(int korisnikID)
+        public ClanarinaKlasa DajPodatkePocetneStrane(int korisnikID)
         {
             DataSet ds = new DataSet();
 
             SqlConnection pomKonekcija = new SqlConnection(_stringKonekcije);
             pomKonekcija.Open();
 
-            SqlCommand pomKomanda = new SqlCommand("DajPodatkePocetneStrane", pomKonekcija);
+            SqlCommand pomKomanda = new SqlCommand("DajPodatkePocetneStrane",pomKonekcija);
+
             pomKomanda.CommandType = CommandType.StoredProcedure;
             pomKomanda.Parameters.Add("@KorisnikID", SqlDbType.Int).Value = korisnikID;
 
@@ -293,17 +400,35 @@ namespace KlasePodataka.Repository
             pomKonekcija.Close();
             pomKonekcija.Dispose();
 
-            return ds;
+            if (ds.Tables[0].Rows.Count == 0)
+            {
+                return null;
+            }
+
+            DataRow red = ds.Tables[0].Rows[0];
+
+            return new ClanarinaKlasa
+            {
+                StatusClanarine = red["StatusClanarine"].ToString(),
+
+                Korisnik = new KorisnikKlasa
+                {
+                    KorisnikID = korisnikID,
+                    Ime = red["Ime"].ToString(),
+                    Prezime = red["Prezime"].ToString()
+                }
+            };
         }
 
-        public DataSet DajPodatkeZaUpravljanjeNalogom(int korisnikID)
+        public KorisnikKlasa DajPodatkeZaUpravljanjeNalogom(int korisnikID)
         {
             DataSet ds = new DataSet();
 
             SqlConnection pomKonekcija = new SqlConnection(_stringKonekcije);
             pomKonekcija.Open();
 
-            SqlCommand pomKomanda = new SqlCommand("DajPodatkeZaUpravljanjeNalogom", pomKonekcija);
+            SqlCommand pomKomanda = new SqlCommand("DajPodatkeZaUpravljanjeNalogom",pomKonekcija);
+
             pomKomanda.CommandType = CommandType.StoredProcedure;
 
             pomKomanda.Parameters.Add("@KorisnikID", SqlDbType.Int).Value = korisnikID;
@@ -316,7 +441,23 @@ namespace KlasePodataka.Repository
             pomKonekcija.Close();
             pomKonekcija.Dispose();
 
-            return ds;
+            if (ds.Tables[0].Rows.Count == 0)
+            {
+                return null;
+            }
+
+            DataRow red = ds.Tables[0].Rows[0];
+
+            return new KorisnikKlasa
+            {
+                KorisnikID = korisnikID,
+                Ime = red["Ime"].ToString(),
+                Prezime = red["Prezime"].ToString(),
+                Email = red["Email"].ToString(),
+                BrojTelefona = red["BrojTelefona"].ToString(),
+                DatumRodjenja = DateOnly.FromDateTime( Convert.ToDateTime(red["DatumRodjenja"])),
+                Pol = red["Pol"].ToString()
+            };
         }
     }
 }
